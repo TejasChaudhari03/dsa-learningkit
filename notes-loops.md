@@ -217,7 +217,7 @@ let res3 = findSmallestNumber(arr);
 console.log("Min number " + res3);
 ```
 
-## Loops within Loops
+## Loop in Loop
 
 ```javascript
 // Example 1
