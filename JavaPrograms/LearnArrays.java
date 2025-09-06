@@ -1,4 +1,6 @@
 package JavaPrograms;
+import java.util.HashMap;
+import java.util.Map;
 public class LearnArrays {
     public static void main(String[] args) {
         // ---------------- Remove Duplicates ----------------
@@ -81,11 +83,16 @@ public class LearnArrays {
         printArray(arrMissing);
         System.out.println("Missing number: " + missingNumber(arrMissing) + "\n");
 
-        // ---------------- Single Number ----------------
+        // ---------------- Single Number | Using XOR ----------------
         int[] arrSingle = {4,1,2,1,2};
         System.out.print("Input for singleNumber: ");
         printArray(arrSingle);
         System.out.println("Single number (appears once): " + singleNumber(arrSingle));
+
+       // ---------------- Single Number | Using HashMap ----------------
+        System.out.print("Input for singleNumber_HashMap: ");
+        printArray(arrSingle);
+        System.out.println("Single number (appears once) using HashMap: " + singleNumber_HashMap(arrSingle)); 
     }
 
     // 🔹 Utility printer
@@ -245,12 +252,25 @@ public class LearnArrays {
         return total - sum;
     }
 
-    // Single Number
+    // Single Number | XOR approach
     private static int singleNumber(int[] a) {
         int result = 0;
         for (int i = 0; i < a.length; i++) {
             result = result ^ a[i];
         }
         return result;
+    }
+
+    // Single Number | HashMap approach
+    private static int singleNumber_HashMap(int[] a) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int n : a) {
+            map.put(n, map.getOrDefault(n, 0) + 1);
+        }
+
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            if (entry.getValue() == 1) return entry.getKey();
+        }
+        return -1; // should not reach here
     }
 }

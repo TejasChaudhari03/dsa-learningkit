@@ -227,3 +227,22 @@ function singleNumber(a) {
 }
 
 console.log("Single number: " + singleNumber(a11));
+
+// Using HashMap
+let a12 = [4, 1, 2, 1, 2];
+function singleNumberHashMap(a) {
+  let hash = {};
+  for (let i = 0; i < a.length; i++) {
+    if (hash[a[i]] !== undefined) {
+      hash[a[i]] += 1;
+    } else {
+      hash[a[i]] = 1;
+    }
+  }
+  for (let key in hash) {
+    if (hash[key] === 1) {
+      return key;
+    }
+  }
+  return -1;
+}
