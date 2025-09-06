@@ -1,3 +1,4 @@
+package JavaPrograms;
 public class LearnArrays {
     public static void main(String[] args) {
         // ---------------- Remove Duplicates ----------------
