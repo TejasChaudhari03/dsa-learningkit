@@ -40,6 +40,12 @@ public class LearnRecursion {
         // Example: Check if a number is a power of two
         System.out.println("\nIs 16 power of two? " + powerOfTwo(16)); // true
         System.out.println("Is 18 power of two? " + powerOfTwo(18)); // false
+
+        // Example: Fibonacci Series
+        int fibN = 7;
+        System.out.println("\nFibonacci of " + fibN + ": " + fibonacci(fibN)); // 13
+        System.out.println("Fibonacci Series up to " + fibN + ":");
+        fibonacciSeries(fibN); // 0 1 1 2 3 5 8
     }
 
     // Example: Print numbers from n to 1
@@ -93,5 +99,18 @@ public class LearnRecursion {
         if (n == 1) return true;
         else if (n % 2 != 0 || n < 1) return false;
         return powerOfTwo(n / 2);
+    }
+
+    // Example: Fibonacci Series
+    public static int fibonacci(int n) {
+        if (n <= 1) return n;
+        return fibonacci(n - 1) + fibonacci(n - 2);
+    }
+
+    // Example: Fibonacci Series up to n terms
+    public static void fibonacciSeries(int n) {
+        for (int i = 0; i < n; i++) {
+            System.out.print(fibonacci(i) + " ");
+        }
     }
 }

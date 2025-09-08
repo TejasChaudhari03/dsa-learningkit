@@ -89,3 +89,22 @@ function powerOfTwo(n) {
 }
 
 console.log(powerOfTwo(16)); // Output: true
+
+// Example: Fibonacci Series
+function fibonacci(n) {
+  if (n <= 1) return n;
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+let n1 = 6;
+console.log(fibonacci(n1)); // Output: 8 (0, 1, 1, 2, 3, 5, 8)
+
+// Fibonacci Series up to n terms
+function fibonacciSeries(n) {
+  for (let i = 0; i < n; i++) {
+    console.log(fibonacci(i));
+  }
+}
+
+let n2 = 6;
+fibonacciSeries(n2); // Output: 0 1 1 2 3 5
