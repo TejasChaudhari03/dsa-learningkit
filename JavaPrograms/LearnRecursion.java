@@ -3,51 +3,6 @@ package JavaPrograms;
 public class LearnRecursion {
     static int x = 1; // used in print() function
 
-    public static void main(String[] args) {
-        // Example: Print numbers from n to 1
-        int a1 = 5;
-        System.out.println("Print n to 1:");
-        fun(a1); // Output: 5 4 3 2 1
-
-        // Example: Print numbers from 1 to n
-        int a2 = 5;
-        x = 1; // reset global counter
-        System.out.println("\nPrint 1 to n:");
-        print(a2); // Output: 1 2 3 4 5
-
-        // Example : Sum of first n natural numbers
-        int n = 5;
-        System.out.println("\nSum of first " + n + " natural numbers: " + sum(n)); // 15
-
-        // Example: Sum of all elements in an array
-        int[] arr = {1, 2, 3, 4, 5};
-        int size = arr.length;
-        System.out.println("\nSum of array elements: " + arraySum(arr, size)); // 15
-
-        // Example: Sum of all elements in an array (Another Approach)
-        int[] arr1 = {2, 3, 4, 5, 6};
-        int size1 = arr1.length;
-        System.out.println("\nSum of array elements (Another Approach): " + arraySum1(arr1, size1 - 1)); // 15
-
-        // Example: Sum of odd elements in an array
-        int[] arr2 = {1, 2, 3, 4, 5};
-        int size2 = arr2.length - 1;
-        System.out.println("\nSum of odd elements: " + arraySumOdd(arr2, size2)); // 9
-
-        // Example: Factorial of a number
-        System.out.println("\nFactorial of 5: " + factorial(5)); // 120
-
-        // Example: Check if a number is a power of two
-        System.out.println("\nIs 16 power of two? " + powerOfTwo(16)); // true
-        System.out.println("Is 18 power of two? " + powerOfTwo(18)); // false
-
-        // Example: Fibonacci Series
-        int fibN = 7;
-        System.out.println("\nFibonacci of " + fibN + ": " + fibonacci(fibN)); // 13
-        System.out.println("Fibonacci Series up to " + fibN + ":");
-        fibonacciSeries(fibN); // 0 1 1 2 3 5 8
-    }
-
     // Example: Print numbers from n to 1
     public static void fun(int a) {
         if (a <= 0) return; // Base case
@@ -113,4 +68,50 @@ public class LearnRecursion {
             System.out.print(fibonacci(i) + " ");
         }
     }
+
+    public static void main(String[] args) {
+        // Example: Print numbers from n to 1
+        int a1 = 5;
+        System.out.println("Print n to 1:");
+        fun(a1); // Output: 5 4 3 2 1
+
+        // Example: Print numbers from 1 to n
+        int a2 = 5;
+        x = 1; // reset global counter
+        System.out.println("\nPrint 1 to n:");
+        print(a2); // Output: 1 2 3 4 5
+
+        // Example : Sum of first n natural numbers
+        int n = 5;
+        System.out.println("\nSum of first " + n + " natural numbers: " + sum(n)); // 15
+
+        // Example: Sum of all elements in an array
+        int[] arr = {1, 2, 3, 4, 5};
+        int size = arr.length;
+        System.out.println("\nSum of array elements: " + arraySum(arr, size)); // 15
+
+        // Example: Sum of all elements in an array (Another Approach)
+        int[] arr1 = {2, 3, 4, 5, 6};
+        int size1 = arr1.length;
+        System.out.println("\nSum of array elements (Another Approach): " + arraySum1(arr1, size1 - 1)); // 15
+
+        // Example: Sum of odd elements in an array
+        int[] arr2 = {1, 2, 3, 4, 5};
+        int size2 = arr2.length - 1;
+        System.out.println("\nSum of odd elements: " + arraySumOdd(arr2, size2)); // 9
+
+        // Example: Factorial of a number
+        System.out.println("\nFactorial of 5: " + factorial(5)); // 120
+
+        // Example: Check if a number is a power of two
+        System.out.println("\nIs 16 power of two? " + powerOfTwo(16)); // true
+        System.out.println("Is 18 power of two? " + powerOfTwo(18)); // false
+
+        // Example: Fibonacci Series
+        int fibN = 7;
+        System.out.println("\nFibonacci of " + fibN + ": " + fibonacci(fibN)); // 13
+        System.out.println("Fibonacci Series up to " + fibN + ":");
+        fibonacciSeries(fibN); // 0 1 1 2 3 5 8
+    }
+
 }
