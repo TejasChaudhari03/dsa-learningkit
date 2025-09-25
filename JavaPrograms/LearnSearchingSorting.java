@@ -78,6 +78,7 @@ public class LearnSearchingSorting {
 
     // Merge Sort Algorithm in Java
     public static void mergeSort(int[] arr, int left, int right) {
+        if (arr == null || arr.length <= 1) return;
         if (left < right) {
             int mid = left + (right - left) / 2;
             mergeSort(arr, left, mid);

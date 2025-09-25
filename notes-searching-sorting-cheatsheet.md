@@ -1,8 +1,3 @@
-Perfect ✅ — here’s a **1-page condensed cheat-sheet** for **Searching & Sorting (Java + JavaScript)**.
-It’s compact, minimal, and focused on **core code skeletons + complexities** for last-minute revision.
-
----
-
 # 📑 Searching & Sorting — Cheat Sheet
 
 ## 🔎 Searching
@@ -197,5 +192,3 @@ function heapify(a, n, i) {
 - In real-world, rely on **built-in sort functions** (`Arrays.sort`, `arr.sort`).
 
 ---
-
-Do you also want me to make a **visual memory hack (like flowcharts for when to use which algorithm)** alongside this cheat-sheet?

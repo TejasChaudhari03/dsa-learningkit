@@ -245,6 +245,321 @@ public static void insertionSort(int[] arr) {
 ### 🔹 Merge Sort
 
 **Definition:** Divide & Conquer → split array, recursively sort halves, merge them.
+I'll explain each condition and the reasoning behind this merge sort implementation step by step.
+
+### Key Conditions and Their Purpose
+
+### 1. `if (arr == null || arr.length <= 1) return;`
+
+**Purpose**: Base case for edge cases
+
+- **`arr == null`**: Prevents NullPointerException if someone passes a null array
+- **`arr.length <= 1`**: Arrays with 0 or 1 elements are already sorted by definition
+- **Why this approach**: No point in sorting something that's already in its final form
+
+### 2. `if (left < right)`
+
+**Purpose**: Main recursive base case
+
+- **What it means**: Only proceed if there are at least 2 elements in the current subarray
+- **When `left == right`**: We have exactly 1 element (already sorted)
+- **When `left > right`**: Invalid range (shouldn't happen with correct implementation)
+
+**Why this approach**:
+
+```
+Example: arr = [38, 27, 43, 9, 82]
+Initial call: left=0, right=4 → 0 < 4 ✓ (continue)
+Eventually: left=2, right=2 → 2 < 2 ✗ (stop, single element)
+```
+
+### 3. `int mid = left + (right - left) / 2;`
+
+**Purpose**: Find the middle point to divide the array
+
+- **Why not `(left + right) / 2`**: Could cause integer overflow with very large indices
+- **Why this formula**: `left + (right - left) / 2` is overflow-safe
+
+**Example**:
+
+```
+left=0, right=4: mid = 0 + (4-0)/2 = 2
+left=0, right=1: mid = 0 + (1-0)/2 = 0
+```
+
+### 4. The Recursive Calls
+
+```java
+mergeSort(arr, left, mid);        // Sort left half
+mergeSort(arr, mid + 1, right);   // Sort right half
+```
+
+**Why this approach**:
+
+- **Divide and Conquer**: Break problem into smaller, manageable pieces
+- **`mid + 1`**: Ensures no overlap between left and right subarrays
+- **Order matters**: Must sort both halves before merging
+
+## The Merge Process Conditions
+
+### 5. `while (i < n1 && j < n2)`
+
+**Purpose**: Compare elements from both subarrays while both have remaining elements
+
+- **`i < n1`**: Left subarray still has elements
+- **`j < n2`**: Right subarray still has elements
+- **Why both conditions**: Need elements from both sides to compare
+
+### 6. `if (L[i] <= R[j])`
+
+**Purpose**: Maintain stability and ascending order
+
+- **`<=` instead of `<`**: Ensures **stable sorting** (equal elements maintain their relative order)
+- **Why stability matters**: Important for objects with multiple fields
+
+### 7. Cleanup loops
+
+```java
+while (i < n1) { arr[k++] = L[i++]; }  // Copy remaining left elements
+while (j < n2) { arr[k++] = R[j++]; }  // Copy remaining right elements
+```
+
+**Purpose**: Handle remaining elements when one subarray is exhausted
+
+## Why This Overall Approach?
+
+### **Divide and Conquer Philosophy**:
+
+1. **Divide**: Split array into two halves
+2. **Conquer**: Recursively sort each half
+3. **Combine**: Merge the sorted halves
+
+### **Time Complexity Benefits**:
+
+- **O(n log n)** guaranteed performance
+- **log n** levels of recursion
+- **O(n)** work at each level
+
+### **Visualization of the Process**:
+
+```
+[38, 27, 43, 9, 82]
+       ↓ split
+[38, 27, 43] | [9, 82]
+       ↓ split both
+[38] [27, 43] | [9] [82]
+       ↓ split [27, 43]
+[38] [27] [43] | [9] [82]
+       ↓ merge back up
+[38] [27, 43] | [9, 82]
+       ↓
+[27, 38, 43] | [9, 82]
+       ↓
+[9, 27, 38, 43, 82]
+```
+
+The beauty of merge sort is that it guarantees consistent performance regardless of input order, making it very reliable for production systems where predictable performance matters.
+
+I'll break down the merge process in detail, explaining the arguments, conditions, and step-by-step flow.
+
+## Merge Function Arguments
+
+```java
+public static void merge(int[] arr, int left, int mid, int right)
+```
+
+### **Argument Requirements**:
+
+- **`arr`**: The original array being sorted (modified in-place)
+- **`left`**: Starting index of the left subarray
+- **`mid`**: Ending index of the left subarray
+- **`right`**: Ending index of the right subarray
+
+### **Subarray Boundaries**:
+
+- **Left subarray**: `arr[left...mid]` (inclusive)
+- **Right subarray**: `arr[mid+1...right]` (inclusive)
+
+**Example**: If `left=0, mid=2, right=4`
+
+```
+arr = [27, 38, 43, 9, 82]
+Left:  arr[0..2] = [27, 38, 43]
+Right: arr[3..4] = [9, 82]
+```
+
+## Step-by-Step Merge Process
+
+### **Step 1: Calculate Sizes and Create Temporary Arrays**
+
+```java
+int n1 = mid - left + 1;  // Size of left subarray
+int n2 = right - mid;     // Size of right subarray
+int[] L = new int[n1];    // Temporary left array
+int[] R = new int[n2];    // Temporary right array
+```
+
+**Why temporary arrays?**
+
+- We need to preserve original values while overwriting `arr`
+- Direct merging would overwrite values we haven't processed yet
+
+**Size calculation example**:
+
+```
+left=0, mid=2, right=4
+n1 = 2 - 0 + 1 = 3  (elements at indices 0, 1, 2)
+n2 = 4 - 2 = 2      (elements at indices 3, 4)
+```
+
+### **Step 2: Copy Data to Temporary Arrays**
+
+```java
+for (int i = 0; i < n1; i++)
+    L[i] = arr[left + i];
+for (int j = 0; j < n2; j++)
+    R[j] = arr[mid + 1 + j];
+```
+
+**Visual example**:
+
+```
+Original: arr = [27, 38, 43, 9, 82]
+                 ↓   ↓   ↓   ↓  ↓
+Copy to:  L = [27, 38, 43]
+          R = [9, 82]
+```
+
+### **Step 3: Three-Pointer Merge Algorithm**
+
+```java
+int i = 0, j = 0, k = left;
+```
+
+**Pointer purposes**:
+
+- **`i`**: Index for left array `L`
+- **`j`**: Index for right array `R`
+- **`k`**: Index for original array `arr` (where we place merged result)
+
+## Core Merge Conditions
+
+### **Condition 1: Main Comparison Loop**
+
+```java
+while (i < n1 && j < n2) {
+    if (L[i] <= R[j]) {
+        arr[k++] = L[i++];
+    } else {
+        arr[k++] = R[j++];
+    }
+}
+```
+
+**Why both conditions `i < n1 && j < n2`?**
+
+- Need elements from **both** arrays to compare
+- Loop stops when either array is exhausted
+- **AND operation**: Both conditions must be true
+
+**Decision logic**:
+
+- **`L[i] <= R[j]`**: Take from left (≤ ensures stability)
+- **`L[i] > R[j]`**: Take from right
+
+### **Step-by-Step Example**:
+
+```
+L = [27, 38, 43]    R = [9, 82]
+i=0  j=0  k=0
+
+Step 1: L[0]=27, R[0]=9 → 27 > 9
+        arr[0] = 9, j=1, k=1
+
+Step 2: L[0]=27, R[1]=82 → 27 ≤ 82
+        arr[1] = 27, i=1, k=2
+
+Step 3: L[1]=38, R[1]=82 → 38 ≤ 82
+        arr[2] = 38, i=2, k=3
+
+Step 4: L[2]=43, R[1]=82 → 43 ≤ 82
+        arr[3] = 43, i=3, k=4
+
+Now i=3, n1=3, so i < n1 is false → exit main loop
+```
+
+### **Condition 2 & 3: Cleanup Loops**
+
+```java
+while (i < n1) {
+    arr[k++] = L[i++];
+}
+while (j < n2) {
+    arr[k++] = R[j++];
+}
+```
+
+**Why needed?**
+
+- One array might be exhausted before the other
+- Remaining elements are already sorted
+- Just copy them over
+
+**In our example**:
+
+- After main loop: `i=3, j=1`
+- Left array exhausted (`i=3, n1=3`)
+- Right array has remaining: `R[1]=82`
+- Copy: `arr[4] = 82`
+
+## Critical Requirements for Merge to Work
+
+### **1. Input Subarrays Must Be Pre-sorted**
+
+```java
+// This works:
+L = [27, 38, 43]  // sorted
+R = [9, 82]       // sorted
+
+// This won't work correctly:
+L = [43, 27, 38]  // not sorted
+R = [82, 9]       // not sorted
+```
+
+### **2. Correct Boundary Calculation**
+
+- **Left boundary**: `left` to `mid` (inclusive)
+- **Right boundary**: `mid+1` to `right` (inclusive)
+- **No gap**: `mid+1` ensures no missing elements
+- **No overlap**: Clear separation between subarrays
+
+### **3. In-Place Modification**
+
+- Original array `arr` is modified directly
+- Temporary arrays are just workspace
+- Final result overwrites the original segment
+
+## Memory and Performance Implications
+
+### **Space Complexity**: O(n)
+
+- Temporary arrays `L` and `R` require extra space
+- Total space proportional to the size being merged
+
+### **Time Complexity**: O(n)
+
+- Each element is copied exactly twice (to temp, then back)
+- Each element is compared at most once
+- Linear time for linear amount of data
+
+### **Why This Approach?**
+
+- **Stable**: Equal elements maintain relative order
+- **Predictable**: Always O(n) time regardless of data distribution
+- **Simple**: Easy to understand and implement correctly
+- **Optimal**: Cannot merge two sorted arrays faster than O(n)
+
+The merge operation is the heart of merge sort's efficiency - it's the "combine" step that makes the divide-and-conquer strategy work effectively.
 
 - Time: Always **O(n log n)**
 - Space: **O(n)**
