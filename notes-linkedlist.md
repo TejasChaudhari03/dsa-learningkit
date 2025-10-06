@@ -1,6 +1,6 @@
 # Linked List — Interview Notes (Java + JavaScript — concise, multi-method analysis)
 
-Brief, then deep-dive. These notes collect common interview problems, multiple solution methods where useful, code snippets in **Java** and **JavaScript**, time/space complexity, short explanation, and quick interview/resume phrasing you can use.
+These notes collect common interview problems, multiple solution methods where useful, code snippets in **Java** and **JavaScript**, time/space complexity, short explanation, and quick interview/resume .
 
 ---
 
@@ -419,155 +419,307 @@ function isPalindromeArray(head) {
 
 ---
 
-# 8 — Intersection of two linked lists (two common methods)
+---
 
-### A. Two-pointer switching trick (no extra space)
+# 8 — Intersection of Two Linked Lists
+
+### A. Two-pointer Switching Trick (No Extra Space)
+
+#### Java
 
 ```java
 Node a = headA, b = headB;
-while(a != b){
+while (a != b) {
   a = (a == null) ? headB : a.next;
   b = (b == null) ? headA : b.next;
 }
-return a; // either intersection node or null
+return a; // Either intersection node or null
 ```
 
-**Complexity:** O(m + n) time, O(1) space. Elegant: pointers traverse equal total lengths.
+#### JavaScript
 
-### B. Hash set of nodes (store nodes of one list)
+```javascript
+function getIntersectionNode(headA, headB) {
+  let a = headA,
+    b = headB;
+  while (a !== b) {
+    a = a ? a.next : headB;
+    b = b ? b.next : headA;
+  }
+  return a; // Either intersection node or null
+}
+```
+
+**Complexity:** O(m + n) time, O(1) space
+**Idea:** Each pointer traverses both lists; total path length equalizes.
+
+---
+
+### B. Hash Set of Nodes (Store Nodes of One List)
+
+#### Java
 
 ```java
-Set<Node> s = new HashSet<>();
+Set<Node> set = new HashSet<>();
 Node cur = headA;
-while(cur != null){ s.add(cur); cur = cur.next; }
+while (cur != null) {
+  set.add(cur);
+  cur = cur.next;
+}
 cur = headB;
-while(cur != null){
-  if(s.contains(cur)) return cur;
+while (cur != null) {
+  if (set.contains(cur)) return cur;
   cur = cur.next;
 }
 return null;
 ```
 
-**Complexity:** O(m + n) time, O(m) (or O(n)) space.
+#### JavaScript
 
-**Interview tip:** Mention trade-off: O(1) space with two-pointer vs simpler set-based solution.
+```javascript
+function getIntersectionNodeSet(headA, headB) {
+  const set = new Set();
+  let cur = headA;
+  while (cur) {
+    set.add(cur);
+    cur = cur.next;
+  }
+  cur = headB;
+  while (cur) {
+    if (set.has(cur)) return cur;
+    cur = cur.next;
+  }
+  return null;
+}
+```
+
+**Complexity:** O(m + n) time, O(m) space
+**Tip:** Easier to code, but less optimal in memory.
 
 ---
 
-# 9 — Remove nth node from end (two ways)
+# 9 — Remove Nth Node from End
 
-### A. Two-pass (compute length)
+### A. Two-pass (Compute Length)
 
-1. Compute length `L`.
-2. Find node at `L - n` (previous) and remove `prev.next`.
+#### Java
 
-**Complexity:** O(n) time, O(1) space.
+```java
+int length = 0;
+Node cur = head;
+while (cur != null) { cur = cur.next; length++; }
 
-### B. One-pass two-pointer (fast/slow with gap)
+Node dummy = new Node(0);
+dummy.next = head;
+cur = dummy;
+for (int i = 0; i < length - n; i++) cur = cur.next;
+cur.next = cur.next.next;
+return dummy.next;
+```
 
-- Move `first` forward `n+1` steps from dummy; then move both until `first` null; `second` sits before node to remove.
+#### JavaScript
+
+```javascript
+function removeNthFromEnd(head, n) {
+  let dummy = { val: 0, next: head };
+  let length = 0,
+    cur = head;
+  while (cur) {
+    length++;
+    cur = cur.next;
+  }
+
+  cur = dummy;
+  for (let i = 0; i < length - n; i++) cur = cur.next;
+  cur.next = cur.next.next;
+  return dummy.next;
+}
+```
+
+**Complexity:** O(n) time, O(1) space
+
+---
+
+### B. One-pass Two-pointer (Fast/Slow with Gap)
+
+#### Java
 
 ```java
 Node dummy = new Node(0);
 dummy.next = head;
 Node first = dummy, second = dummy;
-for(int i=0;i<=n;i++) first = first.next;
-while(first != null){
+for (int i = 0; i <= n; i++) first = first.next;
+while (first != null) {
   first = first.next;
   second = second.next;
 }
 second.next = second.next.next;
+return dummy.next;
 ```
 
-**Complexity:** O(n) time, O(1) space.
+#### JavaScript
 
-**Note:** Using dummy simplifies removing head.
+```javascript
+function removeNthFromEndOnePass(head, n) {
+  const dummy = { val: 0, next: head };
+  let first = dummy,
+    second = dummy;
+  for (let i = 0; i <= n; i++) first = first.next;
+  while (first) {
+    first = first.next;
+    second = second.next;
+  }
+  second.next = second.next.next;
+  return dummy.next;
+}
+```
+
+**Complexity:** O(n) time, O(1) space
+**Tip:** Dummy node simplifies removing head.
 
 ---
 
-# 10 — Remove elements by value (all nodes with a target value)
+# 10 — Remove Elements by Value
 
-- Use a sentinel/dummy node and iterate, skipping nodes with target value.
+#### Java
 
 ```java
 Node dummy = new Node(0);
 dummy.next = head;
 Node cur = dummy;
-while(cur.next != null){
-  if(cur.next.val == val) cur.next = cur.next.next;
+while (cur.next != null) {
+  if (cur.next.val == val) cur.next = cur.next.next;
   else cur = cur.next;
 }
 return dummy.next;
 ```
 
-**Complexity:** O(n) time, O(1) extra space.
+#### JavaScript
 
-**Edge cases:** head contains the value multiple times → dummy handles it.
+```javascript
+function removeElements(head, val) {
+  const dummy = { val: 0, next: head };
+  let cur = dummy;
+  while (cur.next) {
+    if (cur.next.val === val) cur.next = cur.next.next;
+    else cur = cur.next;
+  }
+  return dummy.next;
+}
+```
+
+**Complexity:** O(n) time, O(1) space
 
 ---
 
-# 11 — Delete duplicates from sorted list
+# 11 — Delete Duplicates from Sorted List
 
-- Since sorted, duplicate nodes cluster. Walk and skip `current.next` while equal.
+#### Java
 
 ```java
 Node cur = head;
-while(cur != null && cur.next != null){
-  if(cur.val == cur.next.val) cur.next = cur.next.next;
+while (cur != null && cur.next != null) {
+  if (cur.val == cur.next.val) cur.next = cur.next.next;
   else cur = cur.next;
 }
 return head;
 ```
 
-**Complexity:** O(n) time, O(1) space.
+#### JavaScript
+
+```javascript
+function deleteDuplicates(head) {
+  let cur = head;
+  while (cur && cur.next) {
+    if (cur.val === cur.next.val) cur.next = cur.next.next;
+    else cur = cur.next;
+  }
+  return head;
+}
+```
+
+**Complexity:** O(n) time, O(1) space
 
 ---
 
-# 12 — Odd-Even indexed list (reorder)
+# 12 — Odd-Even Indexed List
 
-- Partition into odd and even lists, then concatenate: keep `odd` and `evenHead`.
+#### Java
 
 ```java
-if(head == null) return head;
+if (head == null) return head;
 Node odd = head, even = head.next, evenHead = even;
-while(even != null && even.next != null){
+while (even != null && even.next != null) {
   odd.next = odd.next.next;
   even.next = even.next.next;
-  odd = odd.next; even = even.next;
+  odd = odd.next;
+  even = even.next;
 }
 odd.next = evenHead;
 return head;
 ```
 
-**Complexity:** O(n) time, O(1) space.
+#### JavaScript
 
-**Use-case:** Rearrange nodes by index parity while preserving relative order.
+```javascript
+function oddEvenList(head) {
+  if (!head) return head;
+  let odd = head,
+    even = head.next,
+    evenHead = even;
+  while (even && even.next) {
+    odd.next = odd.next.next;
+    even.next = even.next.next;
+    odd = odd.next;
+    even = even.next;
+  }
+  odd.next = evenHead;
+  return head;
+}
+```
+
+**Complexity:** O(n) time, O(1) space
 
 ---
 
-# 13 — Add two numbers (lists as reversed digits)
+# 13 — Add Two Numbers (Lists as Reversed Digits)
 
-- Build new list digit-by-digit using carry. Use dummy head.
+#### Java
 
 ```java
 Node dummy = new Node(0), cur = dummy;
 int carry = 0;
-while(l1 != null || l2 != null || carry != 0){
-  int sum = (l1!=null?l1.val:0) + (l2!=null?l2.val:0) + carry;
+while (l1 != null || l2 != null || carry != 0) {
+  int sum = (l1 != null ? l1.val : 0) + (l2 != null ? l2.val : 0) + carry;
   carry = sum / 10;
   cur.next = new Node(sum % 10);
   cur = cur.next;
-  if(l1 != null) l1 = l1.next;
-  if(l2 != null) l2 = l2.next;
+  if (l1 != null) l1 = l1.next;
+  if (l2 != null) l2 = l2.next;
 }
 return dummy.next;
 ```
 
-**Complexity:** O(max(m,n)) time, O(max(m,n)) space (new list).
+#### JavaScript
 
----
+```javascript
+function addTwoNumbers(l1, l2) {
+  const dummy = { val: 0, next: null };
+  let cur = dummy,
+    carry = 0;
+  while (l1 || l2 || carry) {
+    let sum = (l1 ? l1.val : 0) + (l2 ? l2.val : 0) + carry;
+    carry = Math.floor(sum / 10);
+    cur.next = { val: sum % 10, next: null };
+    cur = cur.next;
+    if (l1) l1 = l1.next;
+    if (l2) l2 = l2.next;
+  }
+  return dummy.next;
+}
+```
 
-Got it 👍 — here’s a **Markdown notes section** for **“Merge Two Sorted Linked Lists”** (Java + JavaScript, with & without dummy node, including complexities and explanation).
+**Complexity:** O(max(m, n)) time, O(max(m, n)) space
 
 ---
 
@@ -715,59 +867,135 @@ MyLinkedList.mergeTwoListsDummy = function (l1, l2) {
 
 ---
 
-# Additional Practical Tips & Variants (Interview Notes)
+# 15 — Rotate List to the Right by K Places
 
-- **Sentinel (Dummy) Node**:
+#### Java
 
-  - Use a dummy head (or tail) to simplify insertion/deletion logic.
-  - Eliminates edge-case handling for operations at the head of the list.
+```java
+public Node rotateRight(Node head, int k) {
+    if (head == null || head.next == null || k == 0) return head;
 
-- **Maintain `size` and `tail` pointers**:
+    // Step 1: find length and last node
+    Node curr = head;
+    int length = 1;
+    while (curr.next != null) {
+        curr = curr.next;
+        length++;
+    }
 
-  - `size` → enables O(1) boundary checks for `get`, `addAtIndex`, and `deleteAtIndex`.
-  - `tail` → enables O(1) `addAtTail` instead of O(n) traversal.
+    // Step 2: find rotation distance
+    int steps = k % length;
+    if (steps == 0) return head;
 
-- **Restoring the list**:
+    // Step 3: use two pointers
+    Node slow = head, fast = head;
+    for (int i = 0; i < steps; i++) fast = fast.next;
 
-  - If asked _not_ to mutate the original input (e.g., during palindrome check or reverse), remember to restore the list back to its original state.
+    // Step 4: move both till fast at tail
+    while (fast.next != null) {
+        slow = slow.next;
+        fast = fast.next;
+    }
 
-- **Time vs. Space Trade-offs**:
+    // Step 5: rewire links
+    fast.next = head;
+    Node newHead = slow.next;
+    slow.next = null;
 
-  - Pointer-based (two-pointer, fast/slow) solutions usually achieve **O(1) extra space**.
-  - HashSet/array-based methods are simpler to implement but use **O(n) space**.
-  - Be explicit about why you choose one in an interview.
+    return newHead;
+}
+// Time: O(n)
+// Space: O(1)
+```
 
-- **Node identity vs. Node value**:
+#### JavaScript
 
-  - For **cycle detection** and **intersection detection**, comparisons are done on _node references_ (identity), not just values.
-  - Be ready to clarify this if the interviewer asks.
+```javascript
+MyLinkedList.prototype.rotateRight = function (k) {
+  if (!this.head || !this.head.next || k === 0) return this.head;
 
-- **Edge Cases to handle / discuss**:
+  // Step 1: find length
+  let length = 0;
+  let curr = this.head;
+  while (curr) {
+    length++;
+    curr = curr.next;
+  }
 
-  - Empty list (`head == null`).
-  - Single node list.
-  - Even vs. odd length lists (important for middle node / palindrome).
-  - Removing the head node (special-case unless dummy used).
-  - Removing the nth node where `n == length` (delete head).
-  - Circular lists (infinite loops unless handled).
+  // Step 2: handle large k
+  k = k % length;
+  if (k === 0) return this.head;
 
-- **Clarity in code**:
+  // Step 3: move fast pointer k ahead
+  let slow = this.head,
+    fast = this.head;
+  for (let i = 0; i < k; i++) fast = fast.next;
 
-  - Use clear conditions like `if (l1 == null) curr.next = l2;` instead of relying on implicit guarantees.
-  - Improves readability and reduces bugs.
+  // Step 4: move both till fast at end
+  while (fast.next) {
+    slow = slow.next;
+    fast = fast.next;
+  }
+
+  // Step 5: rotate
+  fast.next = this.head;
+  let newHead = slow.next;
+  slow.next = null;
+  return newHead;
+};
+// Time: O(n)
+// Space: O(1)
+```
+
+**Explanation:**
+Traverse once to find list length and again to rotate pointers.
+Uses two-pointer technique; works efficiently even when k > n.
 
 ---
 
-# Quick Complexity Summary (per problem)
+# Additional Practical Tips & Interview Variants
 
-- **Basic get/add/delete:** O(n) / O(1) depending on operation.
-- **Middle / Reverse / Cycle (Floyd) / Remove nth (one-pass) / Odd-even / DeleteDuplicates / Remove by value:** **O(n) time, O(1) space**.
-- **Set-based cycle / Intersection (Set) / Palindrome (array):** **O(n) time, O(n) space**.
-- **Add two numbers:** **O(max(m,n)) time, O(max(m,n)) space** (new list of size at most `max(m,n)+1`).
-- **Merge two sorted lists:**
+- **Sentinel (Dummy) Node:**
+  Simplifies head/tail insertions and deletions by removing edge-case checks.
 
-  - **Time complexity:** O(m + n) (each node of both lists visited once).
-  - **Space complexity:** O(1) (in-place pointer rearrangement, no extra structures).
-  - Applies to both approaches: with dummy node or without dummy node.
+- **Maintain `size` and `tail`:**
+  Enables O(1) operations for length checks and tail insertions.
+
+- **Restoring the list:**
+  Reverse back if asked _not_ to mutate the original (e.g., palindrome or partial reverse problems).
+
+- **Trade-offs (Time vs Space):**
+
+  - Prefer O(1) space pointer-based methods when performance matters.
+  - O(n) array/set-based methods are acceptable when clarity or debugging ease is prioritized.
+
+- **Node Identity vs Value:**
+  Always compare **node references** (not just values) in cycle/intersection problems.
+
+- **Edge Cases to Handle:**
+
+  - Empty or single-node lists.
+  - Even vs odd length (for middle/palindrome).
+  - Deleting the head or tail.
+  - Rotating by 0 or full length.
+  - Circular lists (infinite loop guard).
+
+- **Clean Code Practices:**
+  Prefer clear conditionals (`if (l1 == null) curr.next = l2;`) over implicit logic — improves readability and avoids overwrites.
+
+---
+
+# Quick Complexity Summary (Per Problem)
+
+| Problem                                                                                                | Time         | Space        | Notes                   |
+| ------------------------------------------------------------------------------------------------------ | ------------ | ------------ | ----------------------- |
+| Basic get/add/delete                                                                                   | O(1)–O(n)    | O(1)         | Depends on operation    |
+| Reverse / Middle / Floyd Cycle / Remove nth (one-pass) / Odd-even / DeleteDuplicates / Remove by value | O(n)         | O(1)         | Single traversal        |
+| Set-based Cycle / Intersection (Set) / Palindrome (array)                                              | O(n)         | O(n)         | Uses extra memory       |
+| Add Two Numbers                                                                                        | O(max(m, n)) | O(max(m, n)) | New result list         |
+| Merge Two Sorted Lists                                                                                 | O(m + n)     | O(1)         | With or without dummy   |
+| Rotate Right by K                                                                                      | O(n)         | O(1)         | Two-pointer + mod logic |
+| Palindrome (reverse half)                                                                              | O(n)         | O(1)         | In-place compare        |
+| Intersection (two-pointer)                                                                             | O(m + n)     | O(1)         | Elegant identity check  |
 
 ---

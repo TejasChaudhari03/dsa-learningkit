@@ -505,3 +505,38 @@ MyLinkedList.mergeTwoListsDummy = function (l1, l2) {
 // Time complexity: O(m + n)
 // Space complexity: O(1)
 console.log(MyLinkedList.mergeTwoListsDummy(linkedList.head, linkedList.head)); // The new linked list is now 3 -> 3 -> 4 -> 4
+
+// Rotate List to the right by k places
+
+MyLinkedList.prototype.rotateRight = function (k) {
+  if (!this.head || !this.head.next || k === 0) return this.head;
+
+  let curr = this.head;
+  let length = 0;
+  while (curr) {
+    curr = curr.next;
+    length++;
+  }
+
+  let s = this.head;
+  let f = this.head;
+  k = k % length;
+
+  for (let i = 0; i < k; i++) {
+    f = f.next;
+  }
+
+  while (f.next) {
+    s = s.next;
+    f = f.next;
+  }
+
+  f.next = this.head;
+  let newHead = s.next;
+  s.next = null;
+  return newHead;
+};
+// Time complexity: O(n)
+// Space complexity: O(1)
+// Explanation : Time and space complexity is O(n) and O(1) respectively because we traverse the list once and use a constant amount of extra space.
+console.log(MyLinkedList.rotateRight(2)); // The new linked list is now 4 -> 3

@@ -462,6 +462,38 @@ class MyLinkedList {
     // Time complexity: O(m + n)
     // Space complexity: O(1)
     // Explanation : Time complexity is O(m + n) because we traverse both lists once. Space complexity is O(1) because we use a constant amount of extra space.
+
+    // Rotate List to the right by k places
+    public Node rotateRight(Node head, int k) {
+        if (head == null || head.next == null || k == 0) return head;
+
+        // Compute the length of the list and get the last node
+        Node curr = head;
+        int length = 1;
+        while (curr.next != null) {
+            curr = curr.next;
+            length++;
+        }
+
+        Node s = head;
+        Node f = head;
+        int kthNode = k % length;
+        for (int i = 0; i < kthNode; i++) {
+            f = f.next;
+        }
+        while (f.next != null) {
+            s = s.next;
+            f = f.next;
+        }
+
+        f.next = head; // Connect the end of the list to the head
+        Node newHead = s.next; // New head is the (k % length)-th node
+        s.next = null; // Break the link to form the new list
+        return newHead;
+    }
+    // Time complexity: O(n)
+    // Space complexity: O(1)
+    // Explanation : Time complexity is O(n) because we traverse the list a constant number of times. Space complexity is O(1) because we use a constant amount of extra space.
 }
 
 public class LearnLinkedList {
@@ -682,6 +714,24 @@ public class LearnLinkedList {
             mergedListWithDummy = mergedListWithDummy.next;
         }
         System.out.println();
+
+
+        // Rotate List to the right by k places
+        MyLinkedList.Node head20 = myLinkedList.new Node(1);
+        MyLinkedList.Node second20 = myLinkedList.new Node(2);
+        MyLinkedList.Node third20 = myLinkedList.new Node(3);
+        MyLinkedList.Node fourth20 = myLinkedList.new Node(4);
+        MyLinkedList.Node fifth20 = myLinkedList.new Node(5);
+        head20.next = second20;
+        second20.next = third20;
+        third20.next = fourth20;
+        fourth20.next = fifth20;
+        MyLinkedList.Node rotatedList = myLinkedList.rotateRight(head20, 2); // Rotate by 2 places
+        System.out.print("Rotated List: ");
+        while (rotatedList != null) {
+            System.out.print(rotatedList.val + " ");
+            rotatedList = rotatedList.next;
+        }
     }
 }
 
