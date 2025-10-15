@@ -955,12 +955,6 @@ Absolutely ✅ — here’s your **continued professional markdown notes** in th
 
 # **16 — Swap Nodes in Pairs (Iterative + Recursive)**
 
-followed by the updated **Complexity Summary Table**.
-
----
-
-# 16 — Swap Nodes in Pairs
-
 Swapping nodes in pairs means taking every two adjacent nodes in a linked list and swapping them.
 For example, given `1 → 2 → 3 → 4`, the output should be `2 → 1 → 4 → 3`.
 
