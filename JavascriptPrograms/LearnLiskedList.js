@@ -540,3 +540,48 @@ MyLinkedList.prototype.rotateRight = function (k) {
 // Space complexity: O(1)
 // Explanation : Time and space complexity is O(n) and O(1) respectively because we traverse the list once and use a constant amount of extra space.
 console.log(MyLinkedList.rotateRight(2)); // The new linked list is now 4 -> 3
+
+// Swap Nodes in Pairs using iterative approach
+MyLinkedList.prototype.swapPairs = function () {
+  if (!this.head || !this.head.next) return this.head;
+
+  let sentinel = new Node(0);
+  sentinel.next = this.head;
+  let prevNode = sentinel;
+  let currNode = this.head;
+  let nextNode = this.head.next;
+
+  while (currNode && nextNode) {
+    // Swap the nodes
+    prevNode.next = nextNode;
+    currNode.next = nextNode.next;
+    nextNode.next = currNode;
+
+    // Move to the next pair
+    prevNode = currNode;
+    currNode = currNode.next;
+    nextNode = currNode ? currNode.next : null;
+  }
+  return sentinel.next;
+};
+// Time complexity: O(n)
+// Space complexity: O(1)
+// Explanation : Time and space complexity is O(n) and O(1) respectively because we traverse the list once and use a constant amount of extra space.
+console.log(JSON.stringify(linkedList.swapPairs(), null, 2)); // The new linked list is now 3 -> 4
+
+// Swap Nodes in Pairs using recursive approach
+MyLinkedList.prototype.swapPairsRecursive = function (head = this.head) {
+  if (!head || !head.next) return head;
+
+  let l = head;
+  let r = head.next;
+
+  l.next = this.swapPairsRecursive(r.next);
+  r.next = l;
+
+  return r;
+};
+// Time complexity: O(n)
+// Space complexity: O(n) due to recursion stack
+// Explanation : Time complexity is O(n) because we traverse the list once. Space complexity is O(n) due to recursion stack.
+console.log(JSON.stringify(linkedList.swapPairsRecursive(), null, 2)); // The new linked list is now 3 -> 4

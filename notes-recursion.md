@@ -21,7 +21,14 @@
 
 **Recursion** is a programming technique where a function calls itself to solve smaller versions of the same problem. It's a powerful tool for breaking down complex problems into simpler, more manageable subproblems.
 
-Think of recursion like Russian nesting dolls (Matryoshka) - each doll contains a smaller version of itself until you reach the smallest doll that can't be opened further.
+Think of recursion like Russian nesting dolls (Matryoshka) — each doll contains a smaller version of itself until you reach the smallest doll that can't be opened further.
+
+In a simplified sense, recursion can be understood as a process that **works forward first, then backward**.
+
+- **Forward (descending) phase:** Imagine you need to open a stack of boxes, one inside the other. You keep opening each box to find a smaller one inside—this continues until you reach the **smallest box** that can’t be opened further. That’s your **base case**.
+- **Backward (returning) phase:** Once you reach the smallest box, you start **closing the boxes one by one in reverse order**, rebuilding the sequence until all are closed again.
+
+This two-phase process—**opening boxes (forward)** and **closing them (backward)**—captures how recursion breaks a problem down and then builds the solution step by step on the way back.
 
 ---
 

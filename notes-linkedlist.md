@@ -951,6 +951,146 @@ MyLinkedList.prototype.rotateRight = function (k) {
 Traverse once to find list length and again to rotate pointers.
 Uses two-pointer technique; works efficiently even when k > n.
 
+Absolutely ✅ — here’s your **continued professional markdown notes** in the same clean, consistent format as before — now adding
+
+# **16 — Swap Nodes in Pairs (Iterative + Recursive)**
+
+followed by the updated **Complexity Summary Table**.
+
+---
+
+# 16 — Swap Nodes in Pairs
+
+Swapping nodes in pairs means taking every two adjacent nodes in a linked list and swapping them.
+For example, given `1 → 2 → 3 → 4`, the output should be `2 → 1 → 4 → 3`.
+
+There are two standard approaches: **iterative (dummy pointer)** and **recursive**.
+
+---
+
+## Approach 1 — Iterative (Using Dummy Node)
+
+### Java
+
+```java
+// Swap Nodes in Pairs using iterative approach
+public Node swapPairs(Node head) {
+    if (head == null || head.next == null) return head;
+
+    Node dummy = new Node(0); // Create a dummy node to simplify edge cases
+    dummy.next = head; // Link dummy to head
+    Node prev = dummy; // Tracks node before the current pair
+    Node curr = head;  // Current node pointer
+
+    while (curr != null && curr.next != null) { // Process pairs
+        Node next = curr.next; // Second node of the pair
+
+        // Swap nodes
+        curr.next = next.next; // Connect current node to node after next
+        next.next = curr;      // Reverse link: next points to current
+        prev.next = next;      // Link previous node to new head of pair
+
+        // Move pointers ahead for next pair
+        prev = curr;
+        curr = curr.next;
+    }
+    return dummy.next; // Return new head after dummy
+}
+// Time complexity: O(n)
+// Space complexity: O(1)
+// Explanation: Each node visited once, constant extra space.
+```
+
+### JavaScript
+
+```javascript
+// Swap Nodes in Pairs using iterative approach
+MyLinkedList.prototype.swapPairs = function () {
+  if (!this.head || !this.head.next) return this.head;
+
+  let sentinel = new Node(0);
+  sentinel.next = this.head;
+  let prevNode = sentinel;
+  let currNode = this.head;
+  let nextNode = this.head.next;
+
+  while (currNode && nextNode) {
+    // Swap pointers
+    prevNode.next = nextNode;
+    currNode.next = nextNode.next;
+    nextNode.next = currNode;
+
+    // Move to next pair
+    prevNode = currNode;
+    currNode = currNode.next;
+    nextNode = currNode ? currNode.next : null;
+  }
+
+  return sentinel.next;
+};
+// Time complexity: O(n)
+// Space complexity: O(1)
+// Explanation: Iterates once over list, uses only constant extra nodes (sentinel).
+```
+
+✅ **Key Insight:** Dummy (sentinel) node simplifies head handling — avoids separate logic for swapping the first pair.
+
+---
+
+## Approach 2 — Recursive
+
+### Java
+
+```java
+// Swap Nodes in Pairs using recursive approach
+public Node swapPairsRecursive(Node head) {
+    if (head == null || head.next == null) return head; // Base case
+
+    Node first = head;        // First node
+    Node second = head.next;  // Second node
+
+    // Swap and recursively process next pairs
+    first.next = swapPairsRecursive(second.next);
+    second.next = first;
+
+    return second; // Return new head of this pair
+}
+// Time complexity: O(n)
+// Space complexity: O(n) due to recursion stack
+// Explanation: Each node visited once, recursion depth = list length / 2.
+```
+
+### JavaScript
+
+```javascript
+// Swap Nodes in Pairs using recursive approach
+MyLinkedList.prototype.swapPairsRecursive = function (head = this.head) {
+  if (!head || !head.next) return head;
+
+  let first = head;
+  let second = head.next;
+
+  first.next = this.swapPairsRecursive(second.next);
+  second.next = first;
+
+  return second;
+};
+// Time complexity: O(n)
+// Space complexity: O(n) (recursion stack)
+// Explanation: Simple and elegant recursive definition.
+```
+
+✅ **Intuition:** Recursively swap the rest of the list first, then connect current two nodes in reversed order.
+
+---
+
+## When to Use Which
+
+| Approach                   | Pros                                                | Cons                                                         |
+| -------------------------- | --------------------------------------------------- | ------------------------------------------------------------ |
+| **Iterative (Dummy Node)** | In-place, constant space, avoids recursion overhead | Slightly more verbose setup                                  |
+| **Recursive**              | Cleaner, elegant, concise                           | Uses O(n) stack space, risk of stack overflow on large lists |
+
 ---
 
 # Additional Practical Tips & Interview Variants
@@ -987,15 +1127,17 @@ Uses two-pointer technique; works efficiently even when k > n.
 
 # Quick Complexity Summary (Per Problem)
 
-| Problem                                                                                                | Time         | Space        | Notes                   |
-| ------------------------------------------------------------------------------------------------------ | ------------ | ------------ | ----------------------- |
-| Basic get/add/delete                                                                                   | O(1)–O(n)    | O(1)         | Depends on operation    |
-| Reverse / Middle / Floyd Cycle / Remove nth (one-pass) / Odd-even / DeleteDuplicates / Remove by value | O(n)         | O(1)         | Single traversal        |
-| Set-based Cycle / Intersection (Set) / Palindrome (array)                                              | O(n)         | O(n)         | Uses extra memory       |
-| Add Two Numbers                                                                                        | O(max(m, n)) | O(max(m, n)) | New result list         |
-| Merge Two Sorted Lists                                                                                 | O(m + n)     | O(1)         | With or without dummy   |
-| Rotate Right by K                                                                                      | O(n)         | O(1)         | Two-pointer + mod logic |
-| Palindrome (reverse half)                                                                              | O(n)         | O(1)         | In-place compare        |
-| Intersection (two-pointer)                                                                             | O(m + n)     | O(1)         | Elegant identity check  |
+| Problem                                                                                                | Time         | Space        | Notes / Key Idea                    |
+| ------------------------------------------------------------------------------------------------------ | ------------ | ------------ | ----------------------------------- |
+| Basic get/add/delete                                                                                   | O(1)–O(n)    | O(1)         | Depends on operation                |
+| Reverse / Middle / Floyd Cycle / Remove nth (one-pass) / Odd-even / DeleteDuplicates / Remove by value | O(n)         | O(1)         | Single traversal                    |
+| Set-based Cycle / Intersection (Set) / Palindrome (array)                                              | O(n)         | O(n)         | Uses extra memory                   |
+| Add Two Numbers                                                                                        | O(max(m, n)) | O(max(m, n)) | Creates new result list             |
+| Merge Two Sorted Lists                                                                                 | O(m + n)     | O(1)         | Dummy node simplifies logic         |
+| Rotate Right by K                                                                                      | O(n)         | O(1)         | Two-pointer technique + modulo math |
+| Palindrome (reverse half)                                                                              | O(n)         | O(1)         | In-place compare                    |
+| Intersection (two-pointer)                                                                             | O(m + n)     | O(1)         | Elegant switching trick             |
+| **Swap Nodes in Pairs (Iterative)**                                                                    | **O(n)**     | **O(1)**     | Dummy node for smooth iteration     |
+| **Swap Nodes in Pairs (Recursive)**                                                                    | **O(n)**     | **O(n)**     | Elegant but stack-space recursive   |
 
 ---
