@@ -82,3 +82,47 @@ console.log(findWordsContainingChar("Hello World", "o")); // Output: [0, 1]
 // 1. Character not present in any word: "Hello World", "x" -> []
 // Explanation: The nested loops check each word for the presence of the character and store the indices of matching words in the result array.
 // Space Complexity: O(k) where k is number of words containing character
+
+// Jewels and Stones
+
+// Using brute force
+var numJewelsInStonesBruteForce = function (jewels, stones) {
+  let count = 0;
+  for (let i = 0; i < stones.length; i++) {
+    if (jewels.includes(stones[i])) {
+      count++;
+    }
+    // Alternative brute force approach or scene behind includes()
+    // for (let j = 0; j < jewels.length; j++) {
+    //   if (stones[i] === jewels[j]) {
+    //     count++;
+    //     break;
+    //   }
+    // }
+  }
+  return count;
+};
+// Time Complexity: O(n * m) where n is length of stones and m is length of jewels
+// Space Complexity: O(1)
+// Edge Cases:
+// 1. No jewels: "", "abc" -> 0
+// 2. No stones: "a", "" -> 0
+// Explanation: The includes() method checks if each stone is a jewel, leading to higher time complexity for larger inputs.
+
+// Using Set for efficient lookup
+var numJewelsInStones = function (jewels, stones) {
+  let jewelSet = new Set(jewels);
+  let count = 0;
+  for (let stone of stones) {
+    if (jewelSet.has(stone)) {
+      count++;
+    }
+  }
+  return count;
+};
+// Time Complexity: O(n + m) where n is length of jewels and m is length of stones
+// Space Complexity: O(k) where k is number of unique jewels
+// Edge Cases:
+// 1. No jewels: "", "abc" -> 0
+// 2. No stones: "a", "" -> 0
+// Explanation: The Set allows for O(1) average time complexity for lookups, making the counting process efficient.

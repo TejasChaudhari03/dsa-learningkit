@@ -1,17 +1,21 @@
 package JavaPrograms;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class LearnString {
     public static void main(String[] args) {
         String s = "Hello World";
-        // Using built-in function
+
+        // Length of last word in a string
+        // 1. Using built-in function
         System.out.println("Statement : " + s);
         System.out.println("Length of last word (built-in): " + lengthOfLastWordUsingBuiltIn(s)); // Output: 5
-        // Using two loops
+        // 2. Using two loops
         System.out.println("Length of last word (two loops): " + lengthOfLastWordUsingLoops(s)); // Output: 5
-        // Using single loop
+        // 3. Using single loop
         System.out.println("Length of last word (single loop): " + lengthOfLastWordUsingSingleLoop(s)); // Output: 5
         
         // Finding words containing a specific character
@@ -19,6 +23,12 @@ public class LearnString {
         char characterToFind = 'a';
         List<Integer> indices = new LearnString().findWordsContainingChar(wordsArray, characterToFind);
         System.out.println("Indices of words containing '" + characterToFind + "': " + indices); // Output: [0, 1, 3]
+
+        // Jewels and Stones
+        String jewels = "aA";
+        String stones = "aAAbbbb";
+        System.out.println("Number of jewels in stones (brute force): " + numJewelsInStonesBruteForce(jewels, stones)); // Output: 3
+        System.out.println("Number of jewels in stones (using Set): " + numJewelsInStones(jewels, stones)); // Output: 3
     }
 
     // Using built-in functions
@@ -98,4 +108,57 @@ public class LearnString {
     // Edge Cases:
     // 1. Empty array: [] -> []
     // Explanation: The method iterates through each word and checks if it contains the specified character. If it does, the index of that word is added to the result list.
+
+    // Jewels and Stones - Brute Force
+    public static int numJewelsInStonesBruteForce(String jewels, String stones) {
+        int count = 0;
+        for (char stone : stones.toCharArray()) {
+            for (char jewel : jewels.toCharArray()) {
+                if (stone == jewel) {
+                    count++;
+                    break;
+                }
+            }
+        }
+
+        /*  Alternative approach without for-each loop using charAt()
+        * for(int i =0; i<stones.length();i++){
+        *    for (int j = 0; j < jewels.length(); j++) {
+        *        if (stones.charAt(i) == jewels.charAt(j)) {
+        *            count++;
+        *            break;
+        *        }
+        *    }
+        *}
+        */
+        return count;
+    }
+    // Time Complexity: O(m * n) where m is the length of stones and n is the length of jewels
+    // Space Complexity: O(1)
+    // Edge Cases:
+    // 1. Empty jewels: "" -> 0
+    // 2. Empty stones: "a" -> 0
+    // Explanation: The method will return 0 if there are no jewels or stones to compare.
+
+    // Jewels and Stones - Using Set
+    public static int numJewelsInStones(String jewels, String stones) {
+        Set<Character> jewelSet = new HashSet<Character>();
+        for (char jewel : jewels.toCharArray()) {
+            jewelSet.add(jewel);
+        }
+
+        int count = 0;
+        for (char stone : stones.toCharArray()) {
+            if (jewelSet.contains(stone)) {
+                count++;
+            }
+        }
+        return count;
+    }
+    // Time Complexity: O(m + n) where m is the length of stones and n is the length of jewels
+    // Space Complexity: O(n) where n is the length of jewels
+    // Edge Cases:
+    // 1. Empty jewels: "" -> 0
+    // 2. Empty stones: "a" -> 0
+    // Explanation: The method uses a Set to store jewels for O(1) average time complexity lookups, making it more efficient than the brute force approach.
 }
