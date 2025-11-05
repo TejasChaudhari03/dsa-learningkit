@@ -209,6 +209,25 @@ public class LearnArrays {
         System.out.print("Output: ");
         for (String s : reversed) System.out.print(s);
         System.out.println("\n");
+        
+        // ---------------- Reverse String of char array ----------------
+        char[] s = {'h','e','l','l','o'};
+        System.out.print("Input for reverseString (char array): ");
+        for (char c : s) System.out.print(c);
+        System.out.println();
+
+        int left = 0, right = s.length - 1;
+        while (left < right) {
+            char temp = s[left];
+            s[left] = s[right];
+            s[right] = temp;
+            left++;
+            right--;
+        }
+
+        System.out.print("Output: ");
+        for (char c : s) System.out.print(c);
+        System.out.println("\n");
 
         // ---------------- Max Profit (Stocks) ----------------
         int[] prices = {7,1,5,3,6,4};

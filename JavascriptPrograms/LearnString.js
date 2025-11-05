@@ -215,3 +215,30 @@ var balancedStringSplit = function (s) {
 // 2. String with no balanced splits: "RRR" -> 0
 // Explanation: The function uses a counter to track the balance between 'R' and 'L'. Each time the counter returns to zero, it indicates a balanced substring, and the count is incremented.
 console.log(balancedStringSplit("RLRRLLRLRL")); // Output: 4
+
+// Reverse String II
+var reverseStr = function (s, k) {
+  s = s.split("");
+
+  for (let x = 0; x < s.length; x = x + 2 * k) {
+    let n = k;
+    let mid = Math.floor(n / 2);
+    for (let i = 0; i < mid; i++) {
+      let temp = s[x + i];
+      s[x + i] = s[x + n - 1 - i];
+      s[x + n - 1 - i] = temp;
+    }
+  }
+
+  return s.join("");
+};
+// Time Complexity: O(n) where n is length of string
+// Space Complexity: O(1)
+// Edge Cases:
+// 1. String length less than k: "abc", 5 -> "cba" -- entire string reversed
+// 2. String length between k and 2k: "abcdef", 4 -> "dcbaef" -- first k reversed, rest unchanged
+// 3. Empty string: "", 3 -> "" -- no change
+// 4. k is 0: "abc", 0 -> "abc" -- no change
+// 5. k is 8: "abcdefg", 8 -> "gfedcba" -- entire string reversed as length < k
+// Explanation: The function reverses the first k characters for every 2k characters in the string. If there are fewer than k characters left, it reverses all of them. If there are between k and 2k characters left, it reverses the first k characters and leaves the rest unchanged.
+console.log(reverseStr("abcdefg", 2)); // Output: "bacdfeg"

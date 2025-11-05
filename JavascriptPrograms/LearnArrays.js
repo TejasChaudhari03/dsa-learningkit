@@ -246,3 +246,4 @@ function singleNumberHashMap(a) {
   }
   return -1;
 }
+console.log("Single number using HashMap: " + singleNumberHashMap(a12));

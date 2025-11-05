@@ -39,6 +39,11 @@ public class LearnString {
         // Balanced String Split
         String balancedString = "RLRRLLRLRL";
         System.out.println("Number of balanced strings: " + balancedStringSplit(balancedString)); // Output: 4
+
+        // Reverse String II
+        String strToReverse = "abcdefg";
+        int k = 2;
+        System.out.println("Reversed string: " + reverseStr(strToReverse, k)); // Output: "bacdfeg"
     }
 
     // Using built-in functions
@@ -221,4 +226,32 @@ public class LearnString {
     // Time Complexity: O(n) where n is the length of the string
     // Space Complexity: O(1)
     // Explanation: The method counts the number of balanced substrings where the number of 'R's equals the number of 'L's by maintaining two counters and incrementing the count whenever they are equal.
+
+
+    // Reverse String II 
+    public static String reverseStr(String s, int k) {
+        char[] arr = s.toCharArray();
+        for (int i = 0; i < arr.length; i += 2 * k) {
+            int left = i;
+            int right = Math.min(i + k - 1, arr.length - 1);
+            while (left < right) {
+                char temp = arr[left];
+                arr[left] = arr[right];
+                arr[right] = temp;
+                left++;
+                right--;
+            }
+        }
+        return new String(arr);
+    }
+    // Time Complexity: O(n) where n is the length of the string
+    // Space Complexity: O(n) for the character array
+    // Edge Cases: 
+    // 1. k greater than string length: "abc", k=5 -> "cba" -- entire string reversed
+    // 2. k equals string length: "abcd", k=4 -> "dcba" -- entire string reversed
+    // 3. k equals 1: "abcd", k=1 -> "abcd" -- no change
+    // 4. Empty string: "", k=2 -> "" -- no change
+    // 5. String length not a multiple of 2k: "abcdefg", k=2 -> "bacdfeg"
+    // Explanation: The method reverses the first k characters for every 2k characters in the string. If there are fewer than k characters left, it reverses all of them. If there are between k and 2k characters left, it reverses the first k and leaves the rest unchanged.
+
 }
