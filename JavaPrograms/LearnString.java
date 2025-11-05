@@ -1,9 +1,11 @@
 package JavaPrograms;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
 
 public class LearnString {
     public static void main(String[] args) {
@@ -29,6 +31,14 @@ public class LearnString {
         String stones = "aAAbbbb";
         System.out.println("Number of jewels in stones (brute force): " + numJewelsInStonesBruteForce(jewels, stones)); // Output: 3
         System.out.println("Number of jewels in stones (using Set): " + numJewelsInStones(jewels, stones)); // Output: 3
+
+        // Most frequent vowels and consonants
+        String inputString = "hello world";
+        System.out.println("Most frequent vowels or consonants count: " + mostFrequentVowelsAndConsonants(inputString)); // Output: 3
+
+        // Balanced String Split
+        String balancedString = "RLRRLLRLRL";
+        System.out.println("Number of balanced strings: " + balancedStringSplit(balancedString)); // Output: 4
     }
 
     // Using built-in functions
@@ -161,4 +171,54 @@ public class LearnString {
     // 1. Empty jewels: "" -> 0
     // 2. Empty stones: "a" -> 0
     // Explanation: The method uses a Set to store jewels for O(1) average time complexity lookups, making it more efficient than the brute force approach.
+
+    // Most frequent vowels and consonants in a string
+    public static int mostFrequentVowelsAndConsonants(String s) {
+        Map<Character, Integer> freq = new HashMap<>();
+        for (char c : s.toCharArray()) {
+            freq.put(c, freq.getOrDefault(c, 0) + 1);
+        }
+
+        Set<Character> vowels = Set.of('a', 'e', 'i', 'o', 'u');
+        int maxVowelFreq = 0;
+        int maxConsonantFreq = 0;
+
+        for (var entry : freq.entrySet()) {
+            char key = entry.getKey();
+            int value = entry.getValue();
+            if (vowels.contains(key)) {
+                maxVowelFreq = Math.max(maxVowelFreq, value);
+            } else {
+                maxConsonantFreq = Math.max(maxConsonantFreq, value);
+            }
+        }
+        return Math.max(maxVowelFreq, maxConsonantFreq);
+    }
+    // Time Complexity: O(n) where n is the length of the string
+    // Space Complexity: O(k) where k is the number of unique characters in the string
+    // Edge Cases:
+    // 1. Empty string: "" -> 0
+    // Explanation: The method counts the frequency of each character in the string, then determines the maximum frequency among vowels and consonants separately, returning the higher of the two.
+
+    // Balanced String Split
+    public static int balancedStringSplit(String s) {
+        int r=0;
+        int l=0;
+        int count=0;
+        for(int i =0; i<s.length(); i++){
+            if(s.charAt(i)=='R')
+                ++r;
+            else
+                ++l;
+            if(r==l){
+                count++;
+                r=0;
+                l=0;
+            }
+        }
+        return count;
+    }
+    // Time Complexity: O(n) where n is the length of the string
+    // Space Complexity: O(1)
+    // Explanation: The method counts the number of balanced substrings where the number of 'R's equals the number of 'L's by maintaining two counters and incrementing the count whenever they are equal.
 }

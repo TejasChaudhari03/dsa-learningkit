@@ -126,3 +126,92 @@ var numJewelsInStones = function (jewels, stones) {
 // 1. No jewels: "", "abc" -> 0
 // 2. No stones: "a", "" -> 0
 // Explanation: The Set allows for O(1) average time complexity for lookups, making the counting process efficient.
+
+// Most frequent vowels and consonants in a string
+var mostFrequentVowelsAndConsonants = function (s) {
+  let map = {};
+  for (let i = 0; i < s.length; i++) {
+    if (!map[s[i]]) map[s[i]] = 1;
+    else ++map[s[i]];
+  }
+
+  let vowels = ["a", "e", "i", "o", "u"];
+  let maxVowel = 0;
+  let maxConsonant = 0;
+
+  // Approach 1: Iterate through original string (Inefficient - checks duplicates)
+  for (let i = 0; i < s.length; i++) {
+    if (vowels.includes(s[i])) {
+      if (map[s[i]] > maxVowel) maxVowel = map[s[i]]; // Fixed: removed extra bracket
+    } else if (s[i] !== " ") {
+      // Fixed: handle spaces
+      if (map[s[i]] > maxConsonant) maxConsonant = map[s[i]]; // Fixed: removed extra bracket
+    }
+  }
+
+  // Approach 2: Using Object.keys to get map keys (Fixed - corrected loop condition)
+  /*
+  let mapKeys = Object.keys(map);
+  for (let i = 0; i < mapKeys.length; i++) {
+      if (vowels.includes(mapKeys[i])) {
+        if (map[mapKeys[i]] > maxVowel) maxVowel = map[mapKeys[i]];
+      } else if (mapKeys[i] !== ' ') { // Fixed: handle spaces
+        if (map[mapKeys[i]] > maxConsonant) maxConsonant = map[mapKeys[i]];
+      }
+  }
+  */
+
+  // Approach 3: Using Math.max and Set (Optimized - RECOMMENDED)
+  /*
+    let map = {};
+    for (let i = 0; i < s.length; i++) {
+      map[s[i]] = (map[s[i]] || 0) + 1; // or
+      // map[s[i]] = !map[s[i]] ? 1 : ++map[s[i]];
+    }
+
+    let vowels = new Set(['a', 'e', 'i', 'o', 'u']); // Use Set for O(1) lookup
+    let maxVowel = 0;
+    let maxConsonant = 0;
+    let mapKeys = Object.keys(map);
+    for (let i = 0; i < mapKeys.length; i++) {
+      if (vowels.has(mapKeys[i])) { // Fixed: changed includes() to has() for Set
+        maxVowel = Math.max(maxVowel, map[mapKeys[i]]);
+      } else if (mapKeys[i] !== ' ') { // Fixed: handle spaces
+        maxConsonant = Math.max(maxConsonant, map[mapKeys[i]]);
+      }
+    }
+  */
+
+  return maxVowel + maxConsonant;
+};
+console.log(mostFrequentVowelsAndConsonants("hello world")); // Output: 5
+// Time Complexity:
+//   Approach 1: O(n × m) where n is string length, m is vowels array length ≈ O(5n) - Inefficient
+//   Approach 2: O(n + k × m) where k is unique chars ≈ O(n + 5k)
+//   Approach 3: O(n + k) - Most efficient (uses Set for O(1) lookup)
+// Space Complexity: O(k) where k is number of unique characters
+// Edge Cases:
+// 1. String with no vowels: "bcdfg" -> maxVowel = 0
+// 2. String with no consonants: "aeiou" -> maxConsonant = 0
+// 3. String with spaces: "hello world" -> spaces ignored
+// Explanation: The function counts the frequency of each character and then determines the most frequent vowel and consonant, returning their combined frequency.
+
+// Balanced String Split
+var balancedStringSplit = function (s) {
+  let temp = 0;
+  let count = 0;
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] === "R") ++temp;
+    else --temp;
+
+    if (temp === 0) count++;
+  }
+  return count;
+};
+// Time Complexity: O(n) where n is length of string
+// Space Complexity: O(1)
+// Edge Cases:
+// 1. Empty string: "" -> 0
+// 2. String with no balanced splits: "RRR" -> 0
+// Explanation: The function uses a counter to track the balance between 'R' and 'L'. Each time the counter returns to zero, it indicates a balanced substring, and the count is incremented.
+console.log(balancedStringSplit("RLRRLLRLRL")); // Output: 4
