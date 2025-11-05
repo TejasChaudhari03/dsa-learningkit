@@ -758,6 +758,136 @@ var balancedStringSplitTwoCounters = function (s) {
 
 ---
 
+### Problem 6: Reverse String II
+
+**Description:** Reverse the first k characters for every 2k characters in the string from the beginning. If there are fewer than k characters left, reverse all remaining characters. If there are between k and 2k characters left, reverse the first k characters and leave the rest unchanged.
+
+**Example:**
+
+- Input: `s = "abcdefg"`, `k = 2`
+- Output: `"bacdfeg"`
+- Explanation:
+  - First 2k (4) chars: "abcd" → reverse first k (2): "bacd"
+  - Next 2k (4) chars: "efg" → reverse first k (2): "feg" (only 3 chars left, reverse first 2)
+  - Result: "bacdfeg"
+
+#### Approach 1: Two Pointers with Array (JavaScript)
+
+**JavaScript:**
+
+```javascript
+var reverseStr = function (s, k) {
+  s = s.split("");
+
+  for (let x = 0; x < s.length; x = x + 2 * k) {
+    let n = k;
+    let mid = Math.floor(n / 2);
+    for (let i = 0; i < mid; i++) {
+      let temp = s[x + i];
+      s[x + i] = s[x + n - 1 - i];
+      s[x + n - 1 - i] = temp;
+    }
+  }
+
+  return s.join("");
+};
+```
+
+**Time Complexity:** O(n) where n is length of string  
+**Space Complexity:** O(n) - JavaScript strings are immutable, requires array conversion  
+**Edge Cases:**
+
+- String length less than k: `"abc"`, k=5 → `"cba"` (entire string reversed)
+- String length between k and 2k: `"abcdef"`, k=4 → `"dcbaef"` (first k reversed, rest unchanged)
+- Empty string: `""`, k=3 → `""` (no change)
+- k is 1: `"abc"`, k=1 → `"abc"` (reverse every 1 char = no visible change)
+
+**How it works:**
+
+- Outer loop jumps by 2k to process each segment
+- Inner loop reverses first k characters of each segment
+- Uses midpoint calculation to avoid double-swapping
+
+---
+
+#### Approach 2: Two Pointers with Math.min (Java - Cleaner)
+
+**Java:**
+
+```java
+public static String reverseStr(String s, int k) {
+    char[] arr = s.toCharArray();
+    for (int i = 0; i < arr.length; i += 2 * k) {
+        int left = i;
+        int right = Math.min(i + k - 1, arr.length - 1);
+        while (left < right) {
+            char temp = arr[left];
+            arr[left] = arr[right];
+            arr[right] = temp;
+            left++;
+            right--;
+        }
+    }
+    return new String(arr);
+}
+```
+
+**JavaScript (Alternative):**
+
+```javascript
+var reverseStrMinApproach = function (s, k) {
+  let arr = s.split("");
+  for (let i = 0; i < arr.length; i += 2 * k) {
+    let left = i;
+    let right = Math.min(i + k - 1, arr.length - 1);
+    while (left < right) {
+      [arr[left], arr[right]] = [arr[right], arr[left]]; // ES6 destructuring swap
+      left++;
+      right--;
+    }
+  }
+  return arr.join("");
+};
+```
+
+**Time Complexity:** O(n) where n is the length of the string  
+**Space Complexity:** O(n) for the character array  
+**Edge Cases:**
+
+- k greater than string length: `"abc"`, k=5 → `"cba"` (entire string reversed)
+- k equals string length: `"abcd"`, k=4 → `"dcba"` (entire string reversed)
+- k equals 1: `"abcd"`, k=1 → `"abcd"` (no visible change)
+- String length not a multiple of 2k: `"abcdefg"`, k=2 → `"bacdfeg"`
+
+**Key Differences from Approach 1:**
+
+- Uses `Math.min()` to handle boundary conditions elegantly
+- Two-pointer swap (left/right) is more intuitive than midpoint calculation
+- Handles edge cases (remaining chars < k) automatically
+
+---
+
+#### Performance Comparison
+
+| Input            | Approach 1 | Approach 2 | Space |
+| ---------------- | ---------- | ---------- | ----- |
+| `"abcdefg"`, k=2 | O(7)       | O(7)       | O(7)  |
+| `"abcd"`, k=2    | O(4)       | O(4)       | O(4)  |
+| Long string      | O(n)       | O(n)       | O(n)  |
+
+**Both approaches have identical time/space complexity**, but Approach 2 is:
+
+- ✅ More readable with `Math.min()`
+- ✅ Easier to understand (classic two-pointer pattern)
+- ✅ Better handles boundary conditions
+
+**When to Use:**
+
+- **Approach 1:** When you prefer midpoint-based swapping
+- **Approach 2:** Recommended for cleaner, more maintainable code
+
+---
+
 ## Best Practices & Tips
 
 ### 1. **Choose the Right Approach**
@@ -790,14 +920,15 @@ var balancedStringSplitTwoCounters = function (s) {
 
 ## Summary
 
-| Problem                         | Best Approach           | Time   | Space |
-| ------------------------------- | ----------------------- | ------ | ----- |
-| Length of Last Word             | Single Loop             | O(n)   | O(1)  |
-| Find Words with Char            | Linear Search           | O(m×n) | O(k)  |
-| Jewels and Stones               | Set Lookup              | O(m+n) | O(n)  |
-| Most Frequent Vowels/Consonants | Map + Set (Approach 3)  | O(n+k) | O(k)  |
-| Balanced String Split           | Single Counter (Greedy) | O(n)   | O(1)  |
-| Balanced String Split           | Two Counter (Explicit)  | O(n)   | O(1)  |
+| Problem                         | Best Approach             | Time   | Space |
+| ------------------------------- | ------------------------- | ------ | ----- |
+| Length of Last Word             | Single Loop               | O(n)   | O(1)  |
+| Find Words with Char            | Linear Search             | O(m×n) | O(k)  |
+| Jewels and Stones               | Set Lookup                | O(m+n) | O(n)  |
+| Most Frequent Vowels/Consonants | Map + Set (Approach 3)    | O(n+k) | O(k)  |
+| Balanced String Split           | Single Counter (Greedy)   | O(n)   | O(1)  |
+| Balanced String Split           | Two Counter (Explicit)    | O(n)   | O(1)  |
+| Reverse String II               | Two Pointers (Approach 2) | O(n)   | O(n)  |
 
 ---
 
