@@ -44,6 +44,14 @@ public class LearnString {
         String strToReverse = "abcdefg";
         int k = 2;
         System.out.println("Reversed string: " + reverseStr(strToReverse, k)); // Output: "bacdfeg"
+
+        // Palindrome Check using extra space
+        String palindromeTest = "A man, a plan, a canal: Panama";
+        System.out.println("Is palindrome: " + isPalindrome(palindromeTest)); // Output: true
+
+        // Palindrome Check without extra space
+        System.out.println("Is palindrome without extra space: " + isPalindromeWithoutExtraSpace(palindromeTest)); // Output: true
+
     }
 
     // Using built-in functions
@@ -253,5 +261,71 @@ public class LearnString {
     // 4. Empty string: "", k=2 -> "" -- no change
     // 5. String length not a multiple of 2k: "abcdefg", k=2 -> "bacdfeg"
     // Explanation: The method reverses the first k characters for every 2k characters in the string. If there are fewer than k characters left, it reverses all of them. If there are between k and 2k characters left, it reverses the first k and leaves the rest unchanged.
+
+
+    // Palindrome Check using extra space
+    public static boolean isPalindrome(String s) {
+        StringBuilder filteredStr = new StringBuilder();
+        StringBuilder reverseStr = new StringBuilder();
+
+        for(char c : s.toCharArray()){
+            if(Character.isLetterOrDigit(c)){
+                char lower = Character.toLowerCase(c);
+                filteredStr.append(lower);
+                reverseStr.insert(0,lower);
+            }
+        }
+
+        return filteredStr.toString().equals(reverseStr.toString());
+    }
+    // Time Complexity: O(n) where n is the length of the string
+    // Space Complexity: O(n) for the filtered and reversed strings
+    // Edge Cases:
+    // 1. Empty string: "" -> true
+    // Explanation: The method filters out non-alphanumeric characters and converts the string to lowercase, then checks if the filtered string is equal to its reverse.
+
+    // Palindrome Check without extra space
+    public static boolean isPalindromeWithoutExtraSpace(String s) {
+        int left = 0;
+        int right = s.length() - 1;
+
+        while (left < right) {
+            while (left < right && !Character.isLetterOrDigit(s.charAt(left))) {
+                left++;
+            }
+            while (left < right && !Character.isLetterOrDigit(s.charAt(right))) {
+                right--;
+            }
+            if (Character.toLowerCase(s.charAt(left)) != Character.toLowerCase(s.charAt(right))) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+    // Time Complexity: O(n) where n is the length of the string
+    // Space Complexity: O(1)
+    // Edge Cases:
+    // 1. Empty string: "" -> true
+    // Explanation: The method uses two pointers to compare characters from the start and end of the string, skipping non-alphanumeric characters and converting to lowercase for comparison.
+
+
+    // Largest Odd Number in a String
+    public static String largestOddNumber(String num) {
+        int i = num.length() - 1;
+
+        while (i >= 0) {
+            if ((num.charAt(i) - '0') % 2 == 1)
+                return num.substring(0, i + 1);
+            i--;
+        }
+        return "";
+    }
+    // Time Complexity: O(n) where n is the length of the string
+    // Space Complexity: O(1)
+    // Edge Cases:
+    // 1. No odd digits: "2468" -> ""
+    // Explanation: The method iterates from the end of the string to find the last odd digit. If found, it returns the substring up to that digit; otherwise, it returns an empty string.
 
 }

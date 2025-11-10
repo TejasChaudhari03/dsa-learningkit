@@ -242,3 +242,77 @@ var reverseStr = function (s, k) {
 // 5. k is 8: "abcdefg", 8 -> "gfedcba" -- entire string reversed as length < k
 // Explanation: The function reverses the first k characters for every 2k characters in the string. If there are fewer than k characters left, it reverses all of them. If there are between k and 2k characters left, it reverses the first k characters and leaves the rest unchanged.
 console.log(reverseStr("abcdefg", 2)); // Output: "bacdfeg"
+
+// Valid Palindrome using extra space
+
+var isPalindrome = function (s) {
+  s = s.toLowerCase();
+  let filteredStr = "";
+  let reversedStr = "";
+  for (let i = 0; i < s.length; i++) {
+    // if(s[i].match(/[a-z0-9]/)){
+    if (
+      (s[i].charCodeAt() >= "a".charCodeAt() &&
+        s[i].charCodeAt() <= "z".charCodeAt()) ||
+      (s[i].charCodeAt() >= "0".charCodeAt() &&
+        s[i].charCodeAt() <= "9".charCodeAt())
+    ) {
+      filteredStr = filteredStr + s[i];
+      reversedStr = s[i] + reversedStr;
+    }
+  }
+  return filteredStr === reversedStr;
+};
+// Time Complexity: O(n) where n is length of string
+// Space Complexity: O(n) for storing filtered and reversed strings
+// Edge Cases:
+// 1. Empty string: "" -> true
+// 2. String with only non-alphanumeric characters: "!!!" -> true
+// 3. Mixed case and spaces: "A man, a plan, a canal: Panama" -> true
+// Explanation: The function filters out non-alphanumeric characters and converts the string to lowercase. It then constructs a filtered string and its reverse, comparing the two to determine if the original string is a palindrome.
+
+// Valid Palindrome without extra space
+var isPalindromeTwoPointers = function (s) {
+  s = s.toLowerCase();
+  let i = 0;
+  let j = s.length - 1;
+
+  while (i < j) {
+    if (!s[i].match(/[a-z0-9]/i)) {
+      ++i;
+    } else if (!s[j].match(/[a-z0-9]/i)) {
+      --j;
+    } else if (s[i] === s[j]) {
+      ++i;
+      --j;
+    } else {
+      return false;
+    }
+  }
+  return true;
+};
+// Time Complexity: O(n) where n is length of string
+// Space Complexity: O(1)
+// Edge Cases:
+// 1. Empty string: "" -> true
+// 2. String with only non-alphanumeric characters: "!!!" -> true
+// 3. Mixed case and spaces: "A man, a plan, a canal: Panama" -> true
+// Explanation: The function uses two pointers to traverse the string from both ends, skipping non-alphanumeric characters and comparing characters for equality.
+
+// Largest Odd Number in String
+var largestOddNumber = function (num) {
+  let x = num.length - 1;
+  while (x >= 0) {
+    if (Number(num[x] % 2 == 1)) return num.substring(0, x + 1);
+    x--;
+  }
+  return "";
+};
+// Time Complexity: O(n) where n is length of string
+// Space Complexity: O(1)
+// Edge Cases:
+// 1. No odd digits: "2468" -> ""
+// 2. All odd digits: "13579" -> "13579"
+// 3. Empty string: "" -> ""
+// Explanation: The function iterates from the end of the string to find the first odd digit. Once found, it returns the substring from the start to that index. If no odd digit is found, it returns an empty string.
+console.log(largestOddNumber("35427")); // Output: "35427"
