@@ -328,4 +328,29 @@ public class LearnString {
     // 1. No odd digits: "2468" -> ""
     // Explanation: The method iterates from the end of the string to find the last odd digit. If found, it returns the substring up to that digit; otherwise, it returns an empty string.
 
+
+    // Longest Common Prefix
+    public static String longestCommonPrefix(String[] strs) {
+        if (strs == null || strs.length == 0) return "";
+
+        int x = 0;
+        while (x < strs[0].length()) {
+            char ch = strs[0].charAt(x); // reference starting string to match with other
+            for (int i = 1; i < strs.length; i++) {
+                if (ch != strs[i].charAt(x) || x == strs[i].length()) {
+                    return strs[0].substring(0, x);
+                }
+            }
+            ++x;
+        }
+        return strs[0];
+    }
+    // Time Complexity: O(s) where s is the sum of all characters in all strings or
+    // O(n * m) where n is number of strings and m is length of shortest string
+    // Example strs = ["flower","flow","flight"] -> m = 4 (flow is smallest string and prefix cannot be longer than this) and n = 3
+    // Space Complexity: O(1)
+    // Edge Cases:
+    // 1. Empty array: [] -> ""
+    // 2. Single string: ["abc"] -> "abc"
+    // 3. No common prefix: ["abc", "def"] -> ""
 }

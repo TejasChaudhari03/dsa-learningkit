@@ -316,3 +316,23 @@ var largestOddNumber = function (num) {
 // 3. Empty string: "" -> ""
 // Explanation: The function iterates from the end of the string to find the first odd digit. Once found, it returns the substring from the start to that index. If no odd digit is found, it returns an empty string.
 console.log(largestOddNumber("35427")); // Output: "35427"
+
+// Longest Common Prefix
+var longestCommonPrefix = function (strs) {
+  if (strs.length == 0) return "";
+  let x = 0;
+  while (x < strs[0].length) {
+    let ch = strs[0][x]; // reference starting string to match with other
+    for (let i = 1; i < strs.length; i++) {
+      if (ch != strs[i][x] || x == strs.length) return strs[0].substring(0, x);
+    }
+    ++x;
+  }
+  return strs[0];
+};
+// Time Complexity: O(s) where s is the sum of all characters in all strings or
+// O(n * m) where n is number of strings and m is length of shortest string
+// Example strs = ["flower","flow","flight"] -> m = 4 (flow is smallest string and prefix cannot be longer than this) and n = 3
+// Space Complexity: O(1)
+// Edge Cases:
+// 1. No common prefix: ["dog", "racecar", "car"] -> ""
