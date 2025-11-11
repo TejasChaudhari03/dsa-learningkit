@@ -758,163 +758,319 @@ var balancedStringSplitTwoCounters = function (s) {
 
 ---
 
-### Problem 6: Reverse String II
+---
 
-**Description:** Reverse the first k characters for every 2k characters in the string from the beginning. If there are fewer than k characters left, reverse all remaining characters. If there are between k and 2k characters left, reverse the first k characters and leave the rest unchanged.
+### Problem 7: Valid Palindrome
+
+**Description:** Determine if a string is a palindrome, considering only alphanumeric characters and ignoring cases.
 
 **Example:**
 
-- Input: `s = "abcdefg"`, `k = 2`
-- Output: `"bacdfeg"`
-- Explanation:
-  - First 2k (4) chars: "abcd" → reverse first k (2): "bacd"
-  - Next 2k (4) chars: "efg" → reverse first k (2): "feg" (only 3 chars left, reverse first 2)
-  - Result: "bacdfeg"
+- Input: `"A man, a plan, a canal: Panama"`
+- Output: `true`
+- Explanation: After removing non-alphanumeric characters and converting to lowercase: "amanaplanacanalpanama" is a palindrome
 
-#### Approach 1: Two Pointers with Array (JavaScript)
-
-**JavaScript:**
-
-```javascript
-var reverseStr = function (s, k) {
-  s = s.split("");
-
-  for (let x = 0; x < s.length; x = x + 2 * k) {
-    let n = k;
-    let mid = Math.floor(n / 2);
-    for (let i = 0; i < mid; i++) {
-      let temp = s[x + i];
-      s[x + i] = s[x + n - 1 - i];
-      s[x + n - 1 - i] = temp;
-    }
-  }
-
-  return s.join("");
-};
-```
-
-**Time Complexity:** O(n) where n is length of string  
-**Space Complexity:** O(n) - JavaScript strings are immutable, requires array conversion  
-**Edge Cases:**
-
-- String length less than k: `"abc"`, k=5 → `"cba"` (entire string reversed)
-- String length between k and 2k: `"abcdef"`, k=4 → `"dcbaef"` (first k reversed, rest unchanged)
-- Empty string: `""`, k=3 → `""` (no change)
-- k is 1: `"abc"`, k=1 → `"abc"` (reverse every 1 char = no visible change)
-
-**How it works:**
-
-- Outer loop jumps by 2k to process each segment
-- Inner loop reverses first k characters of each segment
-- Uses midpoint calculation to avoid double-swapping
-
----
-
-#### Approach 2: Two Pointers with Math.min (Java - Cleaner)
+#### Approach 1: Using Extra Space
 
 **Java:**
 
 ```java
-public static String reverseStr(String s, int k) {
-    char[] arr = s.toCharArray();
-    for (int i = 0; i < arr.length; i += 2 * k) {
-        int left = i;
-        int right = Math.min(i + k - 1, arr.length - 1);
-        while (left < right) {
-            char temp = arr[left];
-            arr[left] = arr[right];
-            arr[right] = temp;
-            left++;
-            right--;
+public static boolean isPalindrome(String s) {
+    StringBuilder filteredStr = new StringBuilder();
+    StringBuilder reverseStr = new StringBuilder();
+
+    for(char c : s.toCharArray()){
+        if(Character.isLetterOrDigit(c)){
+            char lower = Character.toLowerCase(c);
+            filteredStr.append(lower);
+            reverseStr.insert(0, lower);
         }
     }
-    return new String(arr);
+
+    return filteredStr.toString().equals(reverseStr.toString());
 }
 ```
 
-**JavaScript (Alternative):**
+**JavaScript:**
 
 ```javascript
-var reverseStrMinApproach = function (s, k) {
-  let arr = s.split("");
-  for (let i = 0; i < arr.length; i += 2 * k) {
-    let left = i;
-    let right = Math.min(i + k - 1, arr.length - 1);
-    while (left < right) {
-      [arr[left], arr[right]] = [arr[right], arr[left]]; // ES6 destructuring swap
-      left++;
-      right--;
+var isPalindrome = function (s) {
+  s = s.toLowerCase();
+  let filteredStr = "";
+  let reversedStr = "";
+  for (let i = 0; i < s.length; i++) {
+    if (
+      (s[i].charCodeAt() >= "a".charCodeAt() &&
+        s[i].charCodeAt() <= "z".charCodeAt()) ||
+      (s[i].charCodeAt() >= "0".charCodeAt() &&
+        s[i].charCodeAt() <= "9".charCodeAt())
+    ) {
+      filteredStr = filteredStr + s[i];
+      reversedStr = s[i] + reversedStr;
     }
   }
-  return arr.join("");
+  return filteredStr === reversedStr;
+};
+```
+
+**Alternative JavaScript (using regex):**
+
+```javascript
+var isPalindromeRegex = function (s) {
+  s = s.toLowerCase();
+  let filteredStr = "";
+  let reversedStr = "";
+  for (let i = 0; i < s.length; i++) {
+    if (s[i].match(/[a-z0-9]/)) {
+      filteredStr = filteredStr + s[i];
+      reversedStr = s[i] + reversedStr;
+    }
+  }
+  return filteredStr === reversedStr;
 };
 ```
 
 **Time Complexity:** O(n) where n is the length of the string  
-**Space Complexity:** O(n) for the character array  
+**Space Complexity:** O(n) for the filtered and reversed strings  
 **Edge Cases:**
 
-- k greater than string length: `"abc"`, k=5 → `"cba"` (entire string reversed)
-- k equals string length: `"abcd"`, k=4 → `"dcba"` (entire string reversed)
-- k equals 1: `"abcd"`, k=1 → `"abcd"` (no visible change)
-- String length not a multiple of 2k: `"abcdefg"`, k=2 → `"bacdfeg"`
+- Empty string: `""` → `true`
+- Only non-alphanumeric: `"!!!"` → `true`
+- Mixed case and spaces: `"A man, a plan, a canal: Panama"` → `true`
 
-**Key Differences from Approach 1:**
-
-- Uses `Math.min()` to handle boundary conditions elegantly
-- Two-pointer swap (left/right) is more intuitive than midpoint calculation
-- Handles edge cases (remaining chars < k) automatically
+**Explanation:** This approach filters out non-alphanumeric characters, converts to lowercase, and builds both a filtered string and its reverse. Then it compares them for equality.
 
 ---
 
-#### Performance Comparison
+#### Approach 2: Two Pointers (Optimized - No Extra Space)
 
-| Input            | Approach 1 | Approach 2 | Space |
-| ---------------- | ---------- | ---------- | ----- |
-| `"abcdefg"`, k=2 | O(7)       | O(7)       | O(7)  |
-| `"abcd"`, k=2    | O(4)       | O(4)       | O(4)  |
-| Long string      | O(n)       | O(n)       | O(n)  |
+**Java:**
 
-**Both approaches have identical time/space complexity**, but Approach 2 is:
+```java
+public static boolean isPalindromeWithoutExtraSpace(String s) {
+    int left = 0;
+    int right = s.length() - 1;
 
-- ✅ More readable with `Math.min()`
-- ✅ Easier to understand (classic two-pointer pattern)
-- ✅ Better handles boundary conditions
+    while (left < right) {
+        while (left < right && !Character.isLetterOrDigit(s.charAt(left))) {
+            left++;
+        }
+        while (left < right && !Character.isLetterOrDigit(s.charAt(right))) {
+            right--;
+        }
+        if (Character.toLowerCase(s.charAt(left)) != Character.toLowerCase(s.charAt(right))) {
+            return false;
+        }
+        left++;
+        right--;
+    }
+    return true;
+}
+```
 
-**When to Use:**
+**JavaScript:**
 
-- **Approach 1:** When you prefer midpoint-based swapping
-- **Approach 2:** Recommended for cleaner, more maintainable code
+```javascript
+var isPalindromeTwoPointers = function (s) {
+  s = s.toLowerCase();
+  let i = 0;
+  let j = s.length - 1;
+
+  while (i < j) {
+    if (!s[i].match(/[a-z0-9]/i)) {
+      ++i;
+    } else if (!s[j].match(/[a-z0-9]/i)) {
+      --j;
+    } else if (s[i] === s[j]) {
+      ++i;
+      --j;
+    } else {
+      return false;
+    }
+  }
+  return true;
+};
+```
+
+**Time Complexity:** O(n) where n is the length of the string  
+**Space Complexity:** O(1) - Most efficient approach ✅  
+**Edge Cases:**
+
+- Empty string: `""` → `true`
+- Only non-alphanumeric: `"!!!"` → `true`
+- Mixed case and spaces: `"A man, a plan, a canal: Panama"` → `true`
+
+**Why This is Better:**
+
+1. **No extra space** - doesn't create new strings
+2. **In-place comparison** - uses two pointers
+3. **Early termination** - returns false as soon as mismatch is found
+
+**How it works:**
+
+- Use two pointers (left and right) starting from both ends
+- Skip non-alphanumeric characters by moving pointers
+- Compare characters after converting to lowercase
+- Return false immediately if any mismatch is found
 
 ---
 
-## Best Practices & Tips
+### Problem 8: Largest Odd Number in String
 
-### 1. **Choose the Right Approach**
+**Description:** Given a string representing a large integer, return the largest odd number as a substring. Return an empty string if no odd number exists.
 
-- Use built-in functions for readability
-- Use manual iteration for space efficiency
-- Use Sets/HashMaps for lookup-heavy operations
+**Example:**
 
-### 2. **Handle Edge Cases**
+- Input: `"35427"`
+- Output: `"35427"` (the entire number is odd)
+- Input: `"2468"`
+- Output: `""` (no odd digits)
 
-- Empty strings
-- Strings with only spaces
-- Single character strings
-- Very long strings
+**Approach: Backward Traversal**
 
-### 3. **Optimize Based on Constraints**
+**Java:**
 
-- Small input → Brute force is acceptable
-- Large input → Use efficient data structures (Set, HashMap)
-- Space-constrained → Use in-place algorithms
+```java
+public static String largestOddNumber(String num) {
+    int i = num.length() - 1;
 
-### 4. **Common Patterns**
+    while (i >= 0) {
+        if ((num.charAt(i) - '0') % 2 == 1)
+            return num.substring(0, i + 1);
+        i--;
+    }
+    return "";
+}
+```
 
-- **Two pointers:** For palindrome, reversing
-- **Sliding window:** For substring problems
-- **Hash structures:** For frequency/existence checks
-- **Stack:** For balanced parentheses, nested structures
+**JavaScript:**
+
+```javascript
+var largestOddNumber = function (num) {
+  let x = num.length - 1;
+  while (x >= 0) {
+    if (Number(num[x]) % 2 == 1) return num.substring(0, x + 1);
+    x--;
+  }
+  return "";
+};
+```
+
+**Time Complexity:** O(n) where n is the length of the string  
+**Space Complexity:** O(1)  
+**Edge Cases:**
+
+- No odd digits: `"2468"` → `""`
+- All odd digits: `"13579"` → `"13579"`
+- Empty string: `""` → `""`
+- Single digit odd: `"5"` → `"5"`
+- Single digit even: `"4"` → `""`
+
+**Key Insight:**
+
+- A number is odd if its last digit is odd
+- To find the largest odd number, start from the rightmost digit
+- Return substring from start to first odd digit found (from right)
+- No need to check every digit - just find first odd from right
+
+**Why Start from Right:**
+
+- Input: `"52468"` → Answer is `"5"`, not `"524"` (which is even)
+- The rightmost odd digit determines the largest odd number
+- Everything to the right of an odd digit makes the number even
+
+---
+
+### Problem 9: Longest Common Prefix
+
+**Description:** Find the longest common prefix string among an array of strings. If there is no common prefix, return an empty string.
+
+**Example:**
+
+- Input: `["flower", "flow", "flight"]`
+- Output: `"fl"`
+- Input: `["dog", "racecar", "car"]`
+- Output: `""` (no common prefix)
+
+**Approach: Vertical Scanning**
+
+**Java:**
+
+```java
+public static String longestCommonPrefix(String[] strs) {
+    if (strs == null || strs.length == 0) return "";
+
+    int x = 0;
+    while (x < strs[0].length()) {
+        char ch = strs[0].charAt(x); // reference starting string to match with other
+        for (int i = 1; i < strs.length; i++) {
+            if (ch != strs[i].charAt(x) || x == strs[i].length()) {
+                return strs[0].substring(0, x);
+            }
+        }
+        ++x;
+    }
+    return strs[0];
+}
+```
+
+**JavaScript:**
+
+```javascript
+var longestCommonPrefix = function (strs) {
+  if (strs.length == 0) return "";
+  let x = 0;
+  while (x < strs[0].length) {
+    let ch = strs[0][x]; // reference starting string to match with other
+    for (let i = 1; i < strs.length; i++) {
+      if (ch != strs[i][x] || x == strs[i].length)
+        return strs[0].substring(0, x);
+    }
+    ++x;
+  }
+  return strs[0];
+};
+```
+
+**Time Complexity:** O(s) where s is the sum of all characters in all strings, or O(n × m) where n is number of strings and m is length of shortest string
+
+**Example:** `strs = ["flower","flow","flight"]` → m = 4 (flow is smallest string and prefix cannot be longer than this) and n = 3
+
+**Space Complexity:** O(1)  
+**Edge Cases:**
+
+- Empty array: `[]` → `""`
+- Single string: `["abc"]` → `"abc"`
+- No common prefix: `["abc", "def"]` → `""`
+- All same strings: `["test", "test"]` → `"test"`
+- One empty string: `["", "abc"]` → `""`
+
+**How it works:**
+
+1. Use first string as reference
+2. Compare each character position across all strings vertically
+3. If any string has different character at position x, return prefix up to x-1
+4. If any string is shorter than current position, return prefix up to current position
+5. If all strings match through all characters of first string, return first string
+
+**Visualization:**
+
+```
+flower
+flow
+flight
+^^^^^^
+Compare column by column:
+- Column 0: f, f, f → ✅ match
+- Column 1: l, l, l → ✅ match
+- Column 2: o, o, i → ❌ mismatch → return "fl"
+```
+
+**Why This Algorithm:**
+
+- **Efficient** - stops as soon as mismatch is found
+- **Simple** - uses first string as reference
+- **Safe** - handles edge cases (empty arrays, short strings)
 
 ---
 
@@ -929,6 +1085,9 @@ var reverseStrMinApproach = function (s, k) {
 | Balanced String Split           | Single Counter (Greedy)   | O(n)   | O(1)  |
 | Balanced String Split           | Two Counter (Explicit)    | O(n)   | O(1)  |
 | Reverse String II               | Two Pointers (Approach 2) | O(n)   | O(n)  |
+| Valid Palindrome                | Two Pointers (Approach 2) | O(n)   | O(1)  |
+| Largest Odd Number              | Backward Traversal        | O(n)   | O(1)  |
+| Longest Common Prefix           | Vertical Scanning         | O(n×m) | O(1)  |
 
 ---
 
