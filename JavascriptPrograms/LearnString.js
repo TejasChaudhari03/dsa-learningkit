@@ -336,3 +336,101 @@ var longestCommonPrefix = function (strs) {
 // Space Complexity: O(1)
 // Edge Cases:
 // 1. No common prefix: ["dog", "racecar", "car"] -> ""
+
+// Valid Anagram using HashMap
+var isAnagram = function (s, t) {
+  if (s.length !== t.length) return false;
+  let map = {};
+  for (let i = 0; i < s.length; i++) {
+    if (!map[s[i]]) {
+      map[s[i]] = 1;
+    } else {
+      ++map[s[i]];
+    }
+  }
+
+  for (let j = 0; j < t.length; j++) {
+    if (!map[t[j]] || map[t[j]] < 0) {
+      return false;
+    } else {
+      --map[t[j]];
+    }
+  }
+
+  return true;
+};
+// Time Complexity: O(n) where n is length of strings
+// Space Complexity: O(1) as the map will have at most 26 keys for lowercase letters
+// Edge Cases:
+// 1. Different lengths: "a", "ab" -> false
+// 2. Same letters different counts: "aabb", "abab" -> true
+// Explanation: The function counts the frequency of each character in the first string using a hash map. It then decrements the count for each character found in the second string. If any character count goes negative or a character is not found, it returns false. If all counts are zero at the end, it returns true.
+console.log(isAnagram("anagram", "nagaram")); // Output: true
+
+// Valid Anagram using Sorting
+var isAnagramSorting = function (s, t) {
+  if (s.length !== t.length) return false;
+  let sortedS = s.split("").sort().join("");
+  let sortedT = t.split("").sort().join("");
+  return sortedS === sortedT;
+};
+// Time Complexity: O(n log n) due to sorting
+// Space Complexity: O(1) if sorting is done in place, otherwise O(n)
+// Edge Cases:
+// 1. Different lengths: "a", "ab" -> false
+// 2. Same letters different counts: "aabb", "abab" -> true
+// Explanation: The function sorts both strings and compares them. If they are equal after sorting, they are anagrams.
+console.log(isAnagramSorting("anagram", "nagaram")); // Output: true
+
+// Valid Anagram using charCodeAt and array for counting
+var isAnagramCharCount = function (s, t) {
+  if (s.length !== t.length) return false;
+
+  const count = new Array(26).fill(0);
+
+  for (let i = 0; i < s.length; i++) {
+    count[s.charCodeAt(i) - 97]++; // 'a' → 97
+    count[t.charCodeAt(i) - 97]--;
+  }
+
+  for (let n of count) {
+    if (n !== 0) return false;
+  }
+
+  return true;
+};
+// Time Complexity: O(n) where n is length of strings
+// Space Complexity: O(1) as the count array has a fixed size of 26
+// Edge Cases:
+// 1. Different lengths: "a", "ab" -> false
+// 2. Same letters different counts: "aabb", "abab" -> true
+// Explanation: The function uses an array of size 26 to count the frequency of each character in both strings. It increments the count for characters in the first string and decrements for the second. If all counts are zero at the end, it returns true.
+console.log(isAnagramCharCount("anagram", "nagaram")); // Output: true
+
+// Isomorphic Strings
+
+var isIsomorphic = function (s, t) {
+  if (s.length !== t.length) return false;
+
+  let mapStoT = {};
+  let mapTtoS = {};
+
+  for (let i = 0; i < s.length; i++) {
+    if (!mapStoT[s[i]] && !mapTtoS[t[i]]) {
+      mapStoT[s[i]] = t[i];
+      mapTtoS[t[i]] = s[i];
+    } else if (mapStoT[t[i]] !== s[i] || mapStoT[s[i]] !== t[i]) {
+      return false;
+    }
+  }
+
+  return true;
+};
+// Time Complexity: O(n) where n is length of strings
+// Space Complexity: O(1) as the maps will have at most 26 keys for lowercase letters
+// Edge Cases:
+// 1. Different lengths: "a", "ab" -> false
+// 2. Same pattern different mapping: "foo", "bar" -> false
+// 3. Identical strings: "egg", "add" -> true because 'e' maps to 'a' and 'g' maps to 'd' and the pattern is consistent
+// Explanation: The function uses two hash maps to track the mapping from characters in string s to string t and vice versa. If a character in s is already mapped to a different character in t or vice versa, it returns false. If the mappings are consistent throughout the strings, it returns true.
+console.log(isIsomorphic("egg", "add")); // Output: true

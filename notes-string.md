@@ -1074,20 +1074,378 @@ Compare column by column:
 
 ---
 
+### Problem 10: Valid Anagram
+
+**Description:** Given two strings `s` and `t`, determine if `t` is an anagram of `s`. An anagram is a word formed by rearranging the letters of another word, using all the original letters exactly once.
+
+**Example:**
+
+- Input: `s = "anagram"`, `t = "nagaram"`
+- Output: `true`
+- Input: `s = "rat"`, `t = "car"`
+- Output: `false`
+
+#### Approach 1: Using HashMap
+
+**Java:**
+
+```java
+public static boolean isAnagramUsingMap(String s, String t) {
+    if (s.length() != t.length())
+        return false;
+
+    HashMap<Character, Integer> map = new HashMap<>();
+
+    for (char c : s.toCharArray()) {
+        map.put(c, map.getOrDefault(c, 0) + 1);
+    }
+
+    for (char d : t.toCharArray()) {
+        if (!map.containsKey(d) || map.get(d) == 0) {
+            return false;
+        }
+        map.put(d, map.get(d) - 1);
+    }
+
+    return true;
+}
+```
+
+**JavaScript:**
+
+```javascript
+var isAnagram = function (s, t) {
+  if (s.length !== t.length) return false;
+  let map = {};
+  for (let i = 0; i < s.length; i++) {
+    if (!map[s[i]]) {
+      map[s[i]] = 1;
+    } else {
+      ++map[s[i]];
+    }
+  }
+
+  for (let j = 0; j < t.length; j++) {
+    if (!map[t[j]] || map[t[j]] < 0) {
+      return false;
+    } else {
+      --map[t[j]];
+    }
+  }
+
+  return true;
+};
+```
+
+**Time Complexity:** O(n) where n is the length of the strings  
+**Space Complexity:** O(k) where k is the number of unique characters in the strings (at most 26 for lowercase letters)  
+**Edge Cases:**
+
+- Empty strings: `""`, `""` → `true`
+- Different lengths: `"abc"`, `"ab"` → `false`
+- Special characters: `"a!b@c"`, `"c@b!a"` → `true`
+- Same string: `"abc"`, `"abc"` → `true`
+
+**Explanation:** The method counts the frequency of each character in the first string and then checks if the second string has the same frequency for all characters by decrementing the counts.
+
+---
+
+#### Approach 2: Using Sorting
+
+**Java:**
+
+```java
+public static boolean isAnagramUsingSorting(String s, String t) {
+    if (s.length() != t.length())
+        return false;
+
+    char[] sArr = s.toCharArray();
+    char[] tArr = t.toCharArray();
+
+    java.util.Arrays.sort(sArr);
+    java.util.Arrays.sort(tArr);
+
+    return java.util.Arrays.equals(sArr, tArr);
+}
+```
+
+**JavaScript:**
+
+```javascript
+var isAnagramSorting = function (s, t) {
+  if (s.length !== t.length) return false;
+  let sortedS = s.split("").sort().join("");
+  let sortedT = t.split("").sort().join("");
+  return sortedS === sortedT;
+};
+```
+
+**Time Complexity:** O(n log n) where n is the length of the strings (due to sorting)  
+**Space Complexity:** O(1) if sorting in place, otherwise O(n)  
+**Edge Cases:**
+
+- Empty strings: `""`, `""` → `true`
+- Different lengths: `"abc"`, `"ab"` → `false`
+- Special characters: `"a!b@c"`, `"c@b!a"` → `true`
+
+**Explanation:** The method sorts both strings and then compares them. If they are equal after sorting, the strings are anagrams.
+
+**Comparison with Approach 1:**
+
+- **HashMap approach:** Faster (O(n)) but uses extra space
+- **Sorting approach:** Slower (O(n log n)) but conceptually simpler
+
+---
+
+#### Approach 3: Using Character Counting Array (Optimized) ✅
+
+**Java:**
+
+```java
+public static boolean isAnagramUsingCounting(String s, String t) {
+    if (s.length() != t.length())
+        return false;
+
+    int[] count = new int[26]; // Only 26 lowercase letters
+
+    for (int i = 0; i < s.length(); i++) {
+        count[s.charAt(i) - 'a']++; // increment for s
+        count[t.charAt(i) - 'a']--; // decrement for t
+    }
+
+    // Check if all counts are zero
+    for (int n : count) {
+        if (n != 0)
+            return false;
+    }
+
+    return true;
+}
+```
+
+**JavaScript:**
+
+```javascript
+var isAnagramCharCount = function (s, t) {
+  if (s.length !== t.length) return false;
+
+  const count = new Array(26).fill(0);
+
+  for (let i = 0; i < s.length; i++) {
+    count[s.charCodeAt(i) - 97]++; // 'a' → 97
+    count[t.charCodeAt(i) - 97]--;
+  }
+
+  for (let n of count) {
+    if (n !== 0) return false;
+  }
+
+  return true;
+};
+```
+
+**Time Complexity:** O(n) where n is the length of the strings  
+**Space Complexity:** O(1) since the size of the count array is constant (26 letters)  
+**Edge Cases:**
+
+- Empty strings: `""`, `""` → `true`
+- Different lengths: `"abc"`, `"ab"` → `false`
+- Same letters different counts: `"aabb"`, `"abab"` → `true`
+
+**Why This is Best:**
+
+1. **O(n) time complexity** - same as HashMap approach
+2. **O(1) space complexity** - fixed size array (26)
+3. **No hash collisions** - direct array indexing
+4. **Single pass** - processes both strings simultaneously
+
+**How it works:**
+
+- Use array of size 26 (for a-z)
+- Increment count for characters in first string
+- Decrement count for characters in second string
+- If all counts are zero, strings are anagrams
+
+**Character to Index Mapping:**
+
+```
+'a' - 'a' = 0
+'b' - 'a' = 1
+'c' - 'a' = 2
+...
+'z' - 'a' = 25
+```
+
+---
+
+#### Performance Comparison
+
+| Approach           | Time Complexity | Space Complexity | Best For                  |
+| ------------------ | --------------- | ---------------- | ------------------------- |
+| HashMap            | O(n)            | O(k) ≤ O(26)     | Unicode characters        |
+| Sorting            | O(n log n)      | O(1) or O(n)     | Simple implementation     |
+| Character Counting | O(n)            | O(1)             | Lowercase letters only ✅ |
+
+**When to Use Each:**
+
+- **Character Counting:** Best for lowercase English letters (most efficient)
+- **HashMap:** When dealing with Unicode, special characters, or mixed case
+- **Sorting:** When simplicity is more important than performance
+
+---
+
+### Problem 11: Isomorphic Strings
+
+**Description:** Two strings `s` and `t` are isomorphic if the characters in `s` can be replaced to get `t`. All occurrences of a character must be replaced with another character while preserving the order. No two characters may map to the same character, but a character may map to itself.
+
+**Example:**
+
+- Input: `s = "egg"`, `t = "add"`
+- Output: `true` (e→a, g→d)
+- Input: `s = "foo"`, `t = "bar"`
+- Output: `false` (o cannot map to both a and r)
+- Input: `s = "paper"`, `t = "title"`
+- Output: `true` (p→t, a→i, e→l, r→e)
+
+**Approach: Bidirectional Mapping**
+
+**Java:**
+
+```java
+public static boolean isIsomorphic(String s, String t) {
+    if (s.length() != t.length())
+        return false;
+
+    Map<Character, Character> mapST = new HashMap<>();
+    Map<Character, Character> mapTS = new HashMap<>();
+
+    for (int i = 0; i < s.length(); i++) {
+        char charS = s.charAt(i);
+        char charT = t.charAt(i);
+
+        if (!mapST.containsKey(charS) && !mapTS.containsKey(charT)) {
+            mapST.put(charS, charT);
+            mapTS.put(charT, charS);
+        } else {
+            if (!Character.valueOf(charT).equals(mapST.get(charS)) ||
+                !Character.valueOf(charS).equals(mapTS.get(charT)))
+                return false;
+        }
+    }
+
+    return true;
+}
+```
+
+**JavaScript:**
+
+```javascript
+var isIsomorphic = function (s, t) {
+  if (s.length !== t.length) return false;
+
+  let mapStoT = {};
+  let mapTtoS = {};
+
+  for (let i = 0; i < s.length; i++) {
+    if (!mapStoT[s[i]] && !mapTtoS[t[i]]) {
+      mapStoT[s[i]] = t[i];
+      mapTtoS[t[i]] = s[i];
+    } else if (mapStoT[s[i]] !== t[i] || mapTtoS[t[i]] !== s[i]) {
+      return false;
+    }
+  }
+
+  return true;
+};
+```
+
+**Time Complexity:** O(n) where n is the length of the strings  
+**Space Complexity:** O(k) where k is the number of unique characters (at most 26 for lowercase letters)  
+**Edge Cases:**
+
+- Different lengths: `"a"`, `"ab"` → `false`
+- Same pattern different mapping: `"foo"`, `"bar"` → `false`
+- Identical strings: `"egg"`, `"add"` → `true`
+- Single character: `"a"`, `"b"` → `true`
+- Character maps to itself: `"abc"`, `"abc"` → `true`
+
+**Why Two Maps Are Needed:**
+
+Without bidirectional mapping, you might incorrectly accept strings where two different characters map to the same character.
+
+**Example of Why One Map Fails:**
+
+```
+s = "badc"
+t = "baba"
+
+With only s→t mapping:
+b→b ✓
+a→a ✓
+d→b ✓ (allowed, but wrong!)
+c→a ✓ (allowed, but wrong!)
+
+Result: false positive (should be false)
+
+With bidirectional mapping:
+b→b and b→b ✓
+a→a and a→a ✓
+d→b but b→b ✗ (b already maps to b, not d)
+Result: correctly returns false
+```
+
+**How it works:**
+
+1. Maintain two hash maps: `s→t` and `t→s`
+2. For each character pair:
+   - If neither is mapped, create both mappings
+   - If either is mapped, verify both mappings are consistent
+3. Return false if any inconsistency is found
+
+**Visualization:**
+
+```
+s = "egg"
+t = "add"
+
+Step 1: e→a, a→e  ✓
+Step 2: g→d, d→g  ✓
+Step 3: g→d, d→g  ✓ (already mapped correctly)
+
+Result: true
+```
+
+```
+s = "foo"
+t = "bar"
+
+Step 1: f→b, b→f  ✓
+Step 2: o→a, a→o  ✓
+Step 3: o→r, but o already maps to a  ✗
+
+Result: false
+```
+
+**Key Insight:** Isomorphic strings preserve the pattern structure. If a character appears multiple times in `s`, it must map to the same character in `t` at all positions, and vice versa.
+
+---
+
 ## Summary
 
-| Problem                         | Best Approach             | Time   | Space |
-| ------------------------------- | ------------------------- | ------ | ----- |
-| Length of Last Word             | Single Loop               | O(n)   | O(1)  |
-| Find Words with Char            | Linear Search             | O(m×n) | O(k)  |
-| Jewels and Stones               | Set Lookup                | O(m+n) | O(n)  |
-| Most Frequent Vowels/Consonants | Map + Set (Approach 3)    | O(n+k) | O(k)  |
-| Balanced String Split           | Single Counter (Greedy)   | O(n)   | O(1)  |
-| Balanced String Split           | Two Counter (Explicit)    | O(n)   | O(1)  |
-| Reverse String II               | Two Pointers (Approach 2) | O(n)   | O(n)  |
-| Valid Palindrome                | Two Pointers (Approach 2) | O(n)   | O(1)  |
-| Largest Odd Number              | Backward Traversal        | O(n)   | O(1)  |
-| Longest Common Prefix           | Vertical Scanning         | O(n×m) | O(1)  |
+| Problem                         | Best Approach                   | Time   | Space |
+| ------------------------------- | ------------------------------- | ------ | ----- |
+| Length of Last Word             | Single Loop                     | O(n)   | O(1)  |
+| Find Words with Char            | Linear Search                   | O(m×n) | O(k)  |
+| Jewels and Stones               | Set Lookup                      | O(m+n) | O(n)  |
+| Most Frequent Vowels/Consonants | Map + Set (Approach 3)          | O(n+k) | O(k)  |
+| Balanced String Split           | Single Counter (Greedy)         | O(n)   | O(1)  |
+| Balanced String Split           | Two Counter (Explicit)          | O(n)   | O(1)  |
+| Reverse String II               | Two Pointers (Approach 2)       | O(n)   | O(n)  |
+| Valid Palindrome                | Two Pointers (Approach 2)       | O(n)   | O(1)  |
+| Largest Odd Number              | Backward Traversal              | O(n)   | O(1)  |
+| Longest Common Prefix           | Vertical Scanning               | O(n×m) | O(1)  |
+| Valid Anagram                   | Character Counting (Approach 3) | O(n)   | O(1)  |
+| Isomorphic Strings              | Bidirectional Mapping           | O(n)   | O(k)  |
 
 ---
 
