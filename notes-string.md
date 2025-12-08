@@ -1430,22 +1430,197 @@ Result: false
 
 ---
 
+### Problem 12: Group Anagrams
+
+**Description:** Given an array of strings, group the anagrams together. An anagram is a word formed by rearranging the letters of another word.
+
+**Example:**
+
+- Input: `["eat", "tea", "tan", "ate", "nat", "bat"]`
+- Output: `[["eat","tea","ate"],["tan","nat"],["bat"]]`
+- Note: The order of groups and strings within groups may vary
+
+#### Approach 1: Using Sorted String as Key
+
+**Java:**
+
+```java
+public static List<List<String>> groupAnagramsUsingHashMap(String[] strs) {
+    Map<String, List<String>> map = new HashMap<>();
+
+    for (String str : strs) {
+        char[] charArray = str.toCharArray();
+        Arrays.sort(charArray);
+        String sortedStr = new String(charArray);
+
+        if (!map.containsKey(sortedStr)) {
+            map.put(sortedStr, new ArrayList<>());
+        }
+        map.get(sortedStr).add(str);
+    }
+
+    return new ArrayList<>(map.values());
+}
+```
+
+**JavaScript:**
+
+```javascript
+var groupAnagramsUsingMap = function (strs) {
+  let map = {};
+  for (let i = 0; i < strs.length; i++) {
+    let sortedstrs = strs[i].split("").sort().join("");
+
+    if (!map[sortedstrs]) {
+      map[sortedstrs] = [strs[i]];
+    } else {
+      map[sortedstrs].push(strs[i]);
+    }
+  }
+
+  return [...Object.keys(map)].map((k) => map[k]);
+};
+```
+
+**Time Complexity:** O(n × m log m) where n is the number of strings and m is the maximum length of a string (due to sorting each string)  
+**Space Complexity:** O(n × m) for storing the grouped anagrams  
+**Edge Cases:**
+
+- Empty array: `[]` → `[]`
+- Array with one string: `["a"]` → `[["a"]]`
+- All strings are anagrams: `["eat", "tea", "ate"]` → `[["eat", "tea", "ate"]]`
+
+**Explanation:** The method sorts each string to create a key and groups strings with the same sorted key together in a hash map. The values of the map are then returned as the grouped anagrams.
+
+---
+
+#### Approach 2: Using Character Frequency Array as Key (Optimized) ✅
+
+**Java:**
+
+```java
+public static List<List<String>> groupAnagramsUsingSortedArrayKey(String[] strs) {
+    Map<String, List<String>> map = new HashMap<>();
+
+    for (String s : strs) {
+        int[] freq = new int[26];
+        for (char c : s.toCharArray()) {
+            freq[c - 'a']++;
+        }
+
+        StringBuilder key = new StringBuilder();
+        for (int count : freq) {
+            key.append("#").append(count);
+        }
+
+        map.computeIfAbsent(key.toString(), k -> new ArrayList<>()).add(s);
+    }
+
+    return new ArrayList<>(map.values());
+}
+```
+
+**JavaScript:**
+
+```javascript
+var groupAnagramsUsingSortedArrayKey = function (strs) {
+  let map = {};
+  for (let i = 0; i < strs.length; i++) {
+    let charCount = new Array(26).fill(0);
+    for (let char of strs[i]) {
+      charCount[char.charCodeAt(0) - 97]++; // 'a' → 97
+    }
+    let key = charCount.join("#");
+
+    if (!map[key]) {
+      map[key] = [strs[i]];
+    } else {
+      map[key].push(strs[i]);
+    }
+  }
+
+  return [...Object.keys(map)].map((k) => map[k]);
+};
+```
+
+**Time Complexity:** O(n × m) where n is the number of strings and m is the maximum length of a string  
+**Space Complexity:** O(n × m) for storing the grouped anagrams  
+**Edge Cases:**
+
+- Empty array: `[]` → `[]`
+- Array with one string: `["a"]` → `[["a"]]`
+- All strings are anagrams: `["eat", "tea", "ate"]` → `[["eat", "tea", "ate"]]`
+- Strings with different lengths: `["a", "ab", "abc"]` → `[["a"], ["ab"], ["abc"]]`
+
+**Explanation:** The function uses a frequency array to count the occurrences of each character in the strings, creating a unique key for each group of anagrams. This approach avoids the need to sort each string, improving efficiency.
+
+**Why This is Better:**
+
+1. **Faster than sorting:** O(n × m) vs O(n × m log m)
+2. **Unique key generation:** Each anagram group has a distinct frequency pattern
+3. **No sorting overhead:** Direct character counting is more efficient
+
+**How it works:**
+
+1. Create a frequency array of size 26 for each string
+2. Count occurrences of each character (a-z)
+3. Convert frequency array to a string key (e.g., "#1#0#0#1#1..." for "eat")
+4. Group strings with identical frequency keys
+
+**Example Visualization:**
+
+```
+Input: ["eat", "tea", "tan"]
+
+"eat" → [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0]
+         a         e                       t
+Key: "#1#0#0#0#1#0#0#0#0#0#0#0#0#0#0#0#0#0#0#1#0#0#0#0#0#0"
+
+"tea" → [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0]
+Key: "#1#0#0#0#1#0#0#0#0#0#0#0#0#0#0#0#0#0#0#1#0#0#0#0#0#0" (same key!)
+
+"tan" → [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0]
+         a               n               t
+Key: "#1#0#0#0#0#0#0#0#0#0#0#0#0#1#0#0#0#0#0#1#0#0#0#0#0#0" (different key)
+
+Result: [["eat", "tea"], ["tan"]]
+```
+
+**Key Insight:** Anagrams have identical character frequencies. Using frequency as a key is more efficient than sorting because it operates in linear time relative to string length.
+
+---
+
+#### Performance Comparison
+
+| Approach            | Time Complexity | Space Complexity | Best For               |
+| ------------------- | --------------- | ---------------- | ---------------------- |
+| Sorted String Key   | O(n × m log m)  | O(n × m)         | Simple implementation  |
+| Frequency Array Key | O(n × m)        | O(n × m)         | Optimal performance ✅ |
+
+**When to Use Each:**
+
+- **Frequency Array Key:** Best for performance-critical applications (optimal time complexity)
+- **Sorted String Key:** Simpler to understand and implement, acceptable for small datasets
+
+---
+
 ## Summary
 
-| Problem                         | Best Approach                   | Time   | Space |
-| ------------------------------- | ------------------------------- | ------ | ----- |
-| Length of Last Word             | Single Loop                     | O(n)   | O(1)  |
-| Find Words with Char            | Linear Search                   | O(m×n) | O(k)  |
-| Jewels and Stones               | Set Lookup                      | O(m+n) | O(n)  |
-| Most Frequent Vowels/Consonants | Map + Set (Approach 3)          | O(n+k) | O(k)  |
-| Balanced String Split           | Single Counter (Greedy)         | O(n)   | O(1)  |
-| Balanced String Split           | Two Counter (Explicit)          | O(n)   | O(1)  |
-| Reverse String II               | Two Pointers (Approach 2)       | O(n)   | O(n)  |
-| Valid Palindrome                | Two Pointers (Approach 2)       | O(n)   | O(1)  |
-| Largest Odd Number              | Backward Traversal              | O(n)   | O(1)  |
-| Longest Common Prefix           | Vertical Scanning               | O(n×m) | O(1)  |
-| Valid Anagram                   | Character Counting (Approach 3) | O(n)   | O(1)  |
-| Isomorphic Strings              | Bidirectional Mapping           | O(n)   | O(k)  |
+| Problem                         | Best Approach                    | Time   | Space  |
+| ------------------------------- | -------------------------------- | ------ | ------ |
+| Length of Last Word             | Single Loop                      | O(n)   | O(1)   |
+| Find Words with Char            | Linear Search                    | O(m×n) | O(k)   |
+| Jewels and Stones               | Set Lookup                       | O(m+n) | O(n)   |
+| Most Frequent Vowels/Consonants | Map + Set (Approach 3)           | O(n+k) | O(k)   |
+| Balanced String Split           | Single Counter (Greedy)          | O(n)   | O(1)   |
+| Balanced String Split           | Two Counter (Explicit)           | O(n)   | O(1)   |
+| Reverse String II               | Two Pointers (Approach 2)        | O(n)   | O(n)   |
+| Valid Palindrome                | Two Pointers (Approach 2)        | O(n)   | O(1)   |
+| Largest Odd Number              | Backward Traversal               | O(n)   | O(1)   |
+| Longest Common Prefix           | Vertical Scanning                | O(n×m) | O(1)   |
+| Valid Anagram                   | Character Counting (Approach 3)  | O(n)   | O(1)   |
+| Isomorphic Strings              | Bidirectional Mapping            | O(n)   | O(k)   |
+| Group Anagrams                  | Frequency Array Key (Approach 2) | O(n×m) | O(n×m) |
 
 ---
 
