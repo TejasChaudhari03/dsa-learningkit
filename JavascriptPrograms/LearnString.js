@@ -434,3 +434,95 @@ var isIsomorphic = function (s, t) {
 // 3. Identical strings: "egg", "add" -> true because 'e' maps to 'a' and 'g' maps to 'd' and the pattern is consistent
 // Explanation: The function uses two hash maps to track the mapping from characters in string s to string t and vice versa. If a character in s is already mapped to a different character in t or vice versa, it returns false. If the mappings are consistent throughout the strings, it returns true.
 console.log(isIsomorphic("egg", "add")); // Output: true
+
+// Group Anagrams using HashMap
+var groupAnagramsUsingMap = function (strs) {
+  let map = {};
+  for (let i = 0; i < strs.length; i++) {
+    let sortedstrs = strs[i].split("").sort().join(""); // Sort each string to create a key and time complexity: O(m log m) where m is length of string
+
+    if (!map[sortedstrs]) {
+      map[sortedstrs] = [strs[i]];
+    } else {
+      map[sortedstrs].push(strs[i]);
+    }
+  }
+
+  return [...Object.keys(map)].map((k) => map[k]);
+};
+// Time Complexity: O(n * m log m) where n is number of strings and m is average length of strings (due to sorting each string)
+// Space Complexity: O(n * m) for storing the grouped anagrams
+// Edge Cases:
+// 1. Empty array: [] -> []
+// 2. Array with one string: ["a"] -> [["a"]]
+// 3. All strings are anagrams: ["eat", "tea", "ate"] -> [["eat", "tea", "ate"]]
+// Explanation: The function sorts each string to create a key and groups strings with the same sorted key together in a hash map. The values of the map are then returned as the grouped anagrams.
+
+// Group Anagrams using Sorted Array Key
+var groupAnagramsUsingSortedArrayKey = function (strs) {
+  let map = {};
+  for (let i = 0; i < strs.length; i++) {
+    let charCount = new Array(26).fill(0); // Array to count frequency of each character
+    for (let char of strs[i]) {
+      charCount[char.charCodeAt(0) - 97]++; // 'a' → 97
+    }
+    let key = charCount.join("#"); // Create a unique key by joining counts with a delimiter
+
+    if (!map[key]) {
+      map[key] = [strs[i]];
+    } else {
+      map[key].push(strs[i]);
+    }
+  }
+
+  return [...Object.keys(map)].map((k) => map[k]);
+
+  /*
+NamasteDSA Approach - Using Frequency Array as Key
+var groupAnagrams = function(strs) {
+    let map={};
+    for(let i=0; i<strs.length;i++){
+        let freqArr = Array(26).fill(0);
+        let s = strs[i];
+
+        for(let j=0; j<s.length; j++){
+            let index = s[j].charCodeAt() - 'a'.charCodeAt();
+            ++freqArr[index];
+        }
+
+        let key="";
+        for(let k =0; k<26;k++){
+            key = key + String.fromCharCode(k) + freqArr[k];
+        }
+
+        // add to map
+        if (!map[key]) {
+            map[key] = [s];
+        } else {
+            map[key].push(s);
+        }
+
+    }  
+    return [...Object.values(map)];
+};
+// Time Complexity: O(n * m) where n is number of strings and m is average length of strings
+// Space Complexity: O(n * m) for storing the grouped anagrams
+// Edge Cases:
+// 1. Empty array: [] -> []
+// 2. Array with one string: ["a"] -> [["a"]]
+// 3. All strings are anagrams: ["eat", "tea", "ate"] -> [["eat", "tea", "ate"]]
+// Explanation: The function uses a frequency array to count the occurrences of each character in the strings, creating a unique key for each group of anagrams. This approach avoids the need to sort each string, improving efficiency.
+*/
+};
+// Time Complexity: O(n * m) where n is number of strings and m is average length of strings
+// Space Complexity: O(n * m) for storing the grouped anagrams
+// Edge Cases:
+// 1. Empty array: [] -> []
+// 2. Array with one string: ["a"] -> [["a"]]
+// 3. All strings are anagrams: ["eat", "tea", "ate"] -> [["eat", "tea", "ate"]]
+// Explanation: The function uses a frequency array to count the occurrences of each character in the strings, creating a unique key for each group of anagrams. This approach avoids the need to sort each string, improving efficiency.
+console.log(
+  groupAnagramsUsingSortedArrayKey(["eat", "tea", "tan", "ate", "nat", "bat"])
+);
+// Output: [["eat","tea","ate"],["tan","nat"],["bat"]]
+// Note: The order of groups and the order of strings within each group may vary.

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Map;
+import java.util.Arrays;
 
 public class LearnString {
     public static void main(String[] args) {
@@ -83,6 +84,19 @@ public class LearnString {
         String str2 = "add";
         System.out.println("Statement : " + str1 + ", " + str2);
         System.out.println("Are isomorphic: " + isIsomorphic(str1, str2)); // Output: true
+
+
+        // Group Anagrams using HashMap
+        String[] anagramStrs = { "eat", "tea", "tan", "ate", "nat", "bat" };
+        System.out.println("Statement : " + String.join(", ", anagramStrs));
+        List<List<String>> groupedAnagrams = groupAnagramsUsingHashMap(anagramStrs);
+        System.out.println("Grouped anagrams: " + groupedAnagrams); // Output: [["eat","tea","ate"],["tan","nat"],["bat"]]
+
+
+        // Group Anagrams using Sorted Array Key
+        List<List<String>> groupedAnagramsSortedKey = groupAnagramsUsingSortedArrayKey(anagramStrs);
+        System.out.println("Grouped anagrams (using sorted array key): " + groupedAnagramsSortedKey); // Output: [["eat","tea","ate"],["tan","nat"],["bat"]]
+
     }
 
     // Using built-in functions
@@ -518,4 +532,64 @@ public class LearnString {
 
         return true;
     }
+    // Time Complexity: O(n) where n is the length of the strings
+    // Space Complexity: O(k) where k is the number of unique characters in the strings
+    // Edge Cases:
+    // 1. Empty strings: "", "" -> true
+    // 2. Different lengths: "egg", "addd" -> false
+    // Explanation: The method uses two maps to track the character mappings from
+    // s to t and from t to s. If a mapping conflict is found, it returns false; otherwise, it returns true.
+
+
+    // Group Anagrams using HashMap
+    public static List<List<String>> groupAnagramsUsingHashMap(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+
+        for (String str : strs) {
+            char[] charArray = str.toCharArray();
+            Arrays.sort(charArray);
+            String sortedStr = new String(charArray);
+
+            if (!map.containsKey(sortedStr)) {
+                map.put(sortedStr, new ArrayList<>());
+            }
+            map.get(sortedStr).add(str);
+        }
+
+        return new ArrayList<>(map.values());
+    }
+    // Time Complexity: O(n * m log m) where n is the number of strings and m is the maximum length of a string
+    // Space Complexity: O(n * m) for storing the grouped anagrams
+    // Edge Cases:
+    // 1. Empty array: [] -> []
+    // Explanation: The method sorts each string to create a key and groups anagrams together in a map. Finally, it returns the grouped anagrams as a list of lists
+
+    // Group Anagrams using Sorted Array Key
+    public static List<List<String>> groupAnagramsUsingSortedArrayKey(String[] strs) {
+          Map<String, List<String>> map = new HashMap<>();
+  
+          for (String s : strs) {
+              int[] freq = new int[26];
+              for (char c : s.toCharArray()) {
+                  freq[c - 'a']++;
+              }
+  
+              StringBuilder key = new StringBuilder();
+              for (int count : freq) {
+                  key.append("#").append(count);
+              }
+  
+              map.computeIfAbsent(key.toString(), k -> new ArrayList<>()).add(s);
+          }
+  
+          return new ArrayList<>(map.values());
+    }
+    // Time Complexity: O(n * m) where n is the number of strings and m is the maximum length of a string
+    // Space Complexity: O(n * m) for storing the grouped anagrams
+    // Edge Cases:
+    // 1. Empty array: [] -> []
+    // 2. Array with one string: ["a"] -> [["a"]]
+    // 3. All strings are anagrams: ["eat", "tea", "ate"] -> [["eat", "tea", "ate"]]
+    // Explanation: The function uses a frequency array to count the occurrences of each character in the strings, creating a unique key for each group of anagrams. This approach avoids the need to sort each string, improving efficiency.
+
 }
