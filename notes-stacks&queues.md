@@ -5,7 +5,7 @@
 1. [Core Concepts](#core-concepts)
 2. [JavaScript Implementations](#javascript-implementations)
 3. [Java Implementations](#java-implementations)
-4. [Advanced: Stack Using Queue](#advanced-stack-using-queue)
+4. [Advanced: Stack Using Queue & Queue Using Stack](#advanced-stack-using-queue--queue-using-stack)
 5. [Comparison & Use Cases](#comparison--use-cases)
 
 ---
@@ -397,7 +397,7 @@ class Queue<T> {
 
 ---
 
-## Advanced: Stack Using Queue
+## Advanced: Stack Using Queue & Queue Using Stack
 
 ### JavaScript: Stack Using Single Queue
 
@@ -636,6 +636,164 @@ class MyStackUsingTwoQueues<T> {
 
 ---
 
+### Queue Using Two Stacks
+
+Now let's look at the opposite problem: implementing a queue using stacks!
+
+#### JavaScript: Queue Using Two Stacks
+
+**Approach: Use two stacks - one for enqueue, one for dequeue**
+
+```javascript
+var MyQueue = function () {
+  this.s1 = []; // stack for enqueue
+  this.s2 = []; // stack for dequeue
+};
+
+MyQueue.prototype.push = function (x) {
+  this.s1.push(x);
+};
+
+MyQueue.prototype.pop = function () {
+  // If s2 is empty, transfer all elements from s1
+  if (this.s2.length === 0) {
+    while (this.s1.length) {
+      this.s2.push(this.s1.pop());
+    }
+  }
+  return this.s2.pop();
+};
+
+MyQueue.prototype.peek = function () {
+  // If s2 is empty, transfer all elements from s1
+  if (this.s2.length === 0) {
+    while (this.s1.length) {
+      this.s2.push(this.s1.pop());
+    }
+  }
+  return this.s2[this.s2.length - 1];
+};
+
+MyQueue.prototype.empty = function () {
+  return this.s1.length === 0 && this.s2.length === 0;
+};
+
+// Example usage:
+const myQueue = new MyQueue();
+myQueue.push(1);
+myQueue.push(2);
+console.log(myQueue.peek()); // returns 1
+console.log(myQueue.pop()); // returns 1
+console.log(myQueue.empty()); // returns false
+
+// Time Complexity:
+// - push(): O(1)
+// - pop(): Amortized O(1) - worst case O(n) when transferring
+// - peek(): Amortized O(1) - worst case O(n) when transferring
+// - empty(): O(1)
+
+// Space Complexity: O(n)
+
+// Algorithm Explanation:
+// 1. s1 (newest): Used for enqueue operations
+// 2. s2 (oldest): Used for dequeue operations
+// 3. When dequeuing and s2 is empty, transfer all from s1 to s2
+// 4. This reverses the order, making FIFO possible
+
+// Example: push(1), push(2), push(3), pop()
+// After pushes: s1=[1,2,3], s2=[]
+// During pop: transfer to s2 -> s1=[], s2=[3,2,1]
+// Pop from s2 returns 1 (bottom of s1, front of queue)
+```
+
+**Why This Works:**
+
+- Stack 1 maintains elements in arrival order (newest on top)
+- When we need to dequeue, we reverse them into Stack 2
+- Stack 2 now has elements in reverse order (oldest on top)
+- This lazy transfer makes amortized time O(1)
+
+---
+
+#### Java: Queue Using Two Stacks
+
+```java
+class MyQueueUsingStacks {
+    private Stacks stackNewest;  // for enqueue
+    private Stacks stackOldest;  // for dequeue
+
+    public MyQueueUsingStacks(int size) {
+        this.stackNewest = new Stacks(size);
+        this.stackOldest = new Stacks(size);
+    }
+
+    // Add element to the end of the queue - O(1)
+    public void enqueue(int value) {
+        stackNewest.push(value);
+    }
+
+    // Move elements from stackNewest to stackOldest if needed
+    private void shiftStacks() {
+        if (stackOldest.isEmpty()) {
+            while (!stackNewest.isEmpty()) {
+                stackOldest.push(stackNewest.pop());
+            }
+        }
+    }
+
+    // Remove and return the front element - Amortized O(1)
+    public int dequeue() {
+        shiftStacks();
+        if (stackOldest.isEmpty()) {
+            throw new NoSuchElementException("Queue is empty");
+        }
+        return stackOldest.pop();
+    }
+
+    // Return front element without removing - Amortized O(1)
+    public int peek() {
+        shiftStacks();
+        if (stackOldest.isEmpty()) {
+            throw new NoSuchElementException("Queue is empty");
+        }
+        return stackOldest.peek();
+    }
+
+    // Check if queue is empty - O(1)
+    public boolean isEmpty() {
+        return stackNewest.isEmpty() && stackOldest.isEmpty();
+    }
+}
+
+// Algorithm Visualization:
+// enqueue(1), enqueue(2), enqueue(3)
+// stackNewest: [1, 2, 3] (top)
+// stackOldest: []
+
+// dequeue() called:
+// Transfer: pop from stackNewest, push to stackOldest
+// stackNewest: []
+// stackOldest: [3, 2, 1] (top)
+// Pop from stackOldest returns 1 ✓ (FIFO maintained)
+
+// enqueue(4)
+// stackNewest: [4]
+// stackOldest: [3, 2] (after previous dequeue)
+
+// Next dequeue():
+// No transfer needed! stackOldest still has elements
+// Pop from stackOldest returns 2 ✓
+
+// Time Complexity Analysis:
+// - enqueue(): Always O(1)
+// - dequeue(): Worst case O(n), but amortized O(1)
+//   Each element is moved exactly once from newest to oldest
+//   Over n operations, total transfers = n
+//   Average per operation = n/n = O(1)
+```
+
+---
+
 ## Comparison & Use Cases
 
 ### When to Use Stack
@@ -688,6 +846,14 @@ class MyStackUsingTwoQueues<T> {
 - ❌ Uses more space (two queues)
 - ❌ More complex swapping logic
 
+**Queue Using Two Stacks:**
+
+- ✅ Amortized O(1) for all operations
+- ✅ Efficient lazy transfer approach
+- ✅ Each element moved at most once
+- ❌ Worst case O(n) for individual operations
+- ✅ Best approach for queue simulation
+
 ### Best Practices
 
 1. **Use Built-in Collections in Production:**
@@ -710,7 +876,7 @@ class MyStackUsingTwoQueues<T> {
 
 4. **Interview Tips:**
    - Explain trade-offs clearly
-   - Mention both approaches (single vs two queues)
+   - Mention both approaches (single vs two queues/stacks)
    - Discuss time/space complexity
    - Consider real-world usage patterns
 
@@ -724,5 +890,8 @@ class MyStackUsingTwoQueues<T> {
 | **Queue**            | FIFO  | enqueue, dequeue, peek | BFS, scheduling, streaming |
 | **Stack (1 Queue)**  | LIFO  | O(n) push or pop       | Space-constrained          |
 | **Stack (2 Queues)** | LIFO  | O(1) push, O(n) pop    | Interview practice         |
+| **Queue (2 Stacks)** | FIFO  | O(1) amortized all ops | Practical queue simulation |
 
 **Key Takeaway:** Choose the right data structure based on your access pattern. Stack for reverse-order, Queue for first-come-first-served!
+
+**Interview Bonus:** Queue using two stacks is the most efficient "opposite implementation" because of its amortized O(1) complexity for all operations!

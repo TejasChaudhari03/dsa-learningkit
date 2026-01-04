@@ -158,3 +158,119 @@ console.log(myStackTwoQueues.empty()); // returns false
 // For pop and top, we transfer all but the last element from the first queue to the second queue, allowing us to dequeue the last added element (for pop) or peek at it (for top). After that, we swap the roles of the two queues.
 // The empty function checks if the first queue is empty.
 // This approach ensures that we adhere to the stack's LIFO principle using only queue operations.
+
+/*
+  Implement queue using stack
+*/
+
+var MyQueue = function () {
+  this.s1 = [];
+  this.s2 = [];
+};
+
+/**
+ * @param {number} x
+ * @return {void}
+ */
+MyQueue.prototype.push = function (x) {
+  this.s1.push(x);
+};
+
+/**
+ * @return {number}
+ */
+MyQueue.prototype.pop = function () {
+  if (this.s2.length === 0) {
+    while (this.s1.length) {
+      this.s2.push(this.s1.pop());
+    }
+  }
+  return this.s2.pop();
+};
+
+/**
+ * @return {number}
+ */
+MyQueue.prototype.peek = function () {
+  if (this.s2.length === 0) {
+    while (this.s1.length) {
+      this.s2.push(this.s1.pop());
+    }
+  }
+  return this.s2[this.s2.length - 1];
+};
+
+/**
+ * @return {boolean}
+ */
+MyQueue.prototype.empty = function () {
+  return this.s1.length === 0 && this.s2.length === 0;
+};
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * var obj = new MyQueue()
+ * obj.push(x)
+ * var param_2 = obj.pop()
+ * var param_3 = obj.peek()
+ * var param_4 = obj.empty()
+ */
+
+// Example usage:
+var myQueue = new MyQueue();
+myQueue.push(1);
+myQueue.push(2);
+console.log(myQueue.peek()); // returns 1
+console.log(myQueue.pop()); // returns 1
+console.log(myQueue.empty()); // returns false
+
+// Complexity Analysis:
+// Time Complexity: Amortized O(1) for push, pop, and peek operations.
+// Space Complexity: O(n) where n is the number of elements in the queue.
+// Explanation:
+// We use two stacks to simulate queue behavior. For push, we simply push the element onto the first stack.
+// For pop and peek, if the second stack is empty, we transfer all elements from the first stack to the second stack, reversing their order. This allows us to pop or peek at the front element of the queue.
+// The empty function checks if both stacks are empty.
+// This approach ensures that we adhere to the queue's FIFO principle using only stack operations.
+
+// Valid Pareentheses
+
+/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var isValid = function (s) {
+  if (s.length % 2 !== 0) return false;
+  let stack = [];
+  let map = {
+    "{": "}",
+    "[": "]",
+    "(": ")",
+  };
+  for (let i = 0; i < s.length; i++) {
+    //if(s[i]==="{" || s[i]==="[" || s[i]==="(" ){
+    if (map[s[i]]) {
+      stack.push(s[i]);
+    } else {
+      let top = stack.pop();
+      //if(!top || (top === "[" && s[i] !="]") || !top || (top === "{" && s[i] !="}") || !top || (top === "(" && s[i] !=")")){
+      if (!top || s[i] != map[top]) {
+        return false;
+      }
+    }
+  }
+
+  return stack.length === 0;
+};
+
+// Example usage:
+console.log(isValid("()")); // true
+console.log(isValid("()[]{}")); // true
+console.log(isValid("(]")); // false
+console.log(isValid("([)]")); // false
+console.log(isValid("{[]}")); // true
+// Complexity Analysis:
+// Time Complexity: O(n), where n is the length of the string s.
+// Space Complexity: O(n) in the worst case, when all characters are opening brackets.
+// Explanation:
+// We use a stack to keep track of opening brackets. For each character in the string, if it's an opening bracket, we push it onto the stack. If it's a closing bracket, we pop the top element from the stack and check if it matches the corresponding opening bracket. If there's a mismatch or if the stack is empty when we encounter a closing bracket, we return false. Finally, if the stack is empty after processing all characters, we return true, indicating that the parentheses are valid.

@@ -1,10 +1,12 @@
 package JavaPrograms;
-
+import java.util.Stack;
+import java.util.Map;
+import java.util.HashMap;
 public class LearnStackQueue {
     public static void main(String[] args) {
         // Test Stack
         System.out.println("Testing Stack:");
-        Stack stack = new Stack(5);
+        Stacks stack = new Stacks(5);
         stack.push(10);
         stack.push(20);
         stack.push(30);
@@ -14,7 +16,7 @@ public class LearnStackQueue {
 
         // Test Queue
         System.out.println("\nTesting Queue:");
-        Queue queue = new Queue(5);
+        Queues queue = new Queues(5);
         queue.enqueue(10);
         queue.enqueue(20);
         queue.enqueue(30);
@@ -40,6 +42,45 @@ public class LearnStackQueue {
         System.out.println("Top: " + stackTwoQueues.top());   // 3
         System.out.println("Pop: " + stackTwoQueues.pop());   // 3
         System.out.println("Is Empty: " + stackTwoQueues.isEmpty()); // false
+    
+        // Implement Queue using Stacks
+        MyQueueUsingStacks queueUsingStacks = new MyQueueUsingStacks(5);
+        queueUsingStacks.enqueue(10);
+        queueUsingStacks.enqueue(20);
+        queueUsingStacks.enqueue(30);
+        System.out.println("Dequeue: " + queueUsingStacks.dequeue()); // 10
+        System.out.println("Is Empty: " + queueUsingStacks.isEmpty()); // false
+
+
+        // Valid Parentheses        
+        // System.out.println("\nTesting Valid Parentheses:");
+        String s1 = "()";
+        String s2 = "()[]{}";
+        String s3 = "(]";
+        System.out.println("Is Valid (\"()\"): " + isValidParentheses(s1));
+        System.out.println("Is Valid (\"()[]{}\"): " + isValidParentheses(s2));
+        System.out.println("Is Valid (\"(]\"): " + isValidParentheses(s3));
+    }
+
+    // Validate parentheses using a Deque to match pairs
+    public static boolean isValidParentheses(String s) {
+        Stack<Character> stack = new Stack<>();
+        Map<Character, Character> map = new HashMap<>();
+        map.put('{', '}');
+        map.put('[', ']');
+        map.put('(', ')');
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (map.containsKey(c)) {
+                stack.push(c);
+            } else {
+                if (stack.isEmpty()) return false;
+                char top = stack.pop();
+                if (c != map.get(top)) return false;
+            }
+        }
+        return stack.isEmpty();
     }
 }
 
@@ -55,12 +96,12 @@ public class LearnStackQueue {
  * 
  * Space Complexity: O(n) where n is maxSize
  */
-class Stack {
+class Stacks {
     private int maxSize;
     private int[] stackArray;
     private int top;
 
-    public Stack(int size) {
+    public Stacks(int size) {
         this.maxSize = size;
         this.stackArray = new int[maxSize];
         this.top = -1; // -1 indicates empty stack
@@ -112,14 +153,14 @@ class Stack {
  * 
  * Space Complexity: O(n) where n is maxSize
  */
-class Queue {
+class Queues {
     private int maxSize;
     private int[] queueArray;
     private int front;
     private int rear;
     private int nItems;
 
-    public Queue(int size) {
+    public Queues(int size) {
         this.maxSize = size;
         this.queueArray = new int[maxSize];
         this.front = 0;
@@ -198,10 +239,10 @@ class Queue {
  * This ensures the newest element is always at the front
  */
 class MyStackUsingSingleQueue {
-    private Queue queue;
+    private Queues queue;
 
     public MyStackUsingSingleQueue(int size) {
-        this.queue = new Queue(size);
+        this.queue = new Queues(size);
     }
 
     // Add element and rotate queue to maintain LIFO order
@@ -258,12 +299,12 @@ class MyStackUsingSingleQueue {
  * This ensures LIFO order using only queue operations
  */
 class MyStackUsingTwoQueues {
-    private Queue queue1;
-    private Queue queue2;
+    private Queues queue1;
+    private Queues queue2;
 
     public MyStackUsingTwoQueues(int size) {
-        this.queue1 = new Queue(size);
-        this.queue2 = new Queue(size);
+        this.queue1 = new Queues(size);
+        this.queue2 = new Queues(size);
     }
 
     // Add element to queue1
@@ -287,7 +328,7 @@ class MyStackUsingTwoQueues {
         int poppedValue = queue1.dequeue();
         
         // Swap queue references
-        Queue temp = queue1;
+        Queues temp = queue1;
         queue1 = queue2;
         queue2 = temp;
         
@@ -313,7 +354,7 @@ class MyStackUsingTwoQueues {
         queue2.enqueue(queue1.dequeue());
         
         // Swap queue references
-        Queue temp = queue1;
+        Queues temp = queue1;
         queue1 = queue2;
         queue2 = temp;
         
@@ -323,5 +364,66 @@ class MyStackUsingTwoQueues {
     // Check if stack is empty
     public boolean isEmpty() {
         return queue1.isEmpty();
+    }                           
+}
+
+/**
+ * Queue implementation using two stacks
+ * enqueue: push onto stackNewest
+ * dequeue: pop from stackOldest; if empty, transfer all elements from stackNewest to stackOldest first
+ *
+ * Time Complexity:
+ * - enqueue(): O(1)
+ * - dequeue(): Amortized O(1)
+ * - isEmpty(): O(1)
+ *
+ * Space Complexity: O(n)
+ */
+class MyQueueUsingStacks {
+    private Stacks stackNewest;
+    private Stacks stackOldest;
+
+    public MyQueueUsingStacks(int size) {
+        this.stackNewest = new Stacks(size);
+        this.stackOldest = new Stacks(size);
+    }
+
+    // Add element to the end of the queue
+    public void enqueue(int value) {
+        stackNewest.push(value);
+    }
+
+    // Move elements from stackNewest to stackOldest if needed
+    private void shiftStacks() {
+        if (stackOldest.isEmpty()) {
+            while (!stackNewest.isEmpty()) {
+                stackOldest.push(stackNewest.pop());
+            }
+        }
+    }
+
+    // Remove and return the front element
+    public int dequeue() {
+        shiftStacks();
+        if (stackOldest.isEmpty()) {
+            System.out.println("Queue is empty");
+            return -1;
+        }
+        return stackOldest.pop();
+    }
+
+    // Return front element without removing
+    public int peek() {
+        shiftStacks();
+        if (stackOldest.isEmpty()) {
+            System.out.println("Queue is empty");
+            return -1;
+        }
+        return stackOldest.peek();
+    }
+
+    // Check if queue is empty
+    public boolean isEmpty() {
+        return stackNewest.isEmpty() && stackOldest.isEmpty();
     }
 }
