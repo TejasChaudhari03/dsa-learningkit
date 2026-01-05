@@ -2,33 +2,46 @@ package JavaPrograms;
 import java.util.Stack;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+
 public class LearnStackQueue {
     public static void main(String[] args) {
         // Test Stack
         System.out.println("Testing Stack:");
-        Stacks stack = new Stacks(5);
+        MyStack stack = new MyStack(5);
+        System.out.println("MyStack created with max size 5.");
+        System.out.println("Push elements 10, 20, 30 onto the stack.");
         stack.push(10);
         stack.push(20);
         stack.push(30);
+        System.out.println("Performing peek, pop and isEmpty operations:");
         System.out.println("Peek: " + stack.peek()); // 30
         System.out.println("Pop: " + stack.pop());   // 30
         System.out.println("Is Empty: " + stack.isEmpty()); // false
 
         // Test Queue
         System.out.println("\nTesting Queue:");
-        Queues queue = new Queues(5);
+        MyQueue queue = new MyQueue(5);
+        System.out.println("MyQueue created with max size 5.");
+        System.out.println("Enqueue elements 10, 20, 30 onto the queue.");
         queue.enqueue(10);
         queue.enqueue(20);
         queue.enqueue(30);
+        System.out.println("Performing peek, dequeue and isEmpty operations:");
+        System.out.println("Peek: " + queue.peek()); // 10
         System.out.println("Dequeue: " + queue.dequeue()); // 10
         System.out.println("Is Empty: " + queue.isEmpty()); // false
 
         // Test MyStackUsingSingleQueue
         System.out.println("\nTesting MyStackUsingSingleQueue:");
         MyStackUsingSingleQueue stackOneQueue = new MyStackUsingSingleQueue(5);
+        System.out.println("MyStackUsingSingleQueue created with max size 5.");
+        System.out.println("Push elements 1, 2, 3 onto the stack.");
         stackOneQueue.push(1);
         stackOneQueue.push(2);
         stackOneQueue.push(3);
+        System.out.println("Performing top, pop and isEmpty operations:");
         System.out.println("Top: " + stackOneQueue.top());   // 3
         System.out.println("Pop: " + stackOneQueue.pop());   // 3
         System.out.println("Is Empty: " + stackOneQueue.isEmpty()); // false
@@ -36,30 +49,56 @@ public class LearnStackQueue {
         // Test MyStackUsingTwoQueues
         System.out.println("\nTesting MyStackUsingTwoQueues:");
         MyStackUsingTwoQueues stackTwoQueues = new MyStackUsingTwoQueues(5);
+        System.out.println("MyStackUsingTwoQueues created with max size 5.");
+        System.out.println("Push elements 1, 2, 3 onto the stack.");
         stackTwoQueues.push(1);
         stackTwoQueues.push(2);
         stackTwoQueues.push(3);
+        System.out.println("Performing top, pop and isEmpty operations:");
         System.out.println("Top: " + stackTwoQueues.top());   // 3
         System.out.println("Pop: " + stackTwoQueues.pop());   // 3
         System.out.println("Is Empty: " + stackTwoQueues.isEmpty()); // false
     
-        // Implement Queue using Stacks
+        // Implement Queue using MyStack
+        System.out.println("\nTesting MyQueueUsingStacks:");
         MyQueueUsingStacks queueUsingStacks = new MyQueueUsingStacks(5);
+        System.out.println("MyQueueUsingStacks created with max size 5.");
+        System.out.println("Enqueue elements 10, 20, 30 onto the queue.");
         queueUsingStacks.enqueue(10);
         queueUsingStacks.enqueue(20);
         queueUsingStacks.enqueue(30);
+        System.out.println("Performing peek, dequeue and isEmpty operations:");
+        System.out.println("Peek: " + queueUsingStacks.peek()); // 10
         System.out.println("Dequeue: " + queueUsingStacks.dequeue()); // 10
         System.out.println("Is Empty: " + queueUsingStacks.isEmpty()); // false
 
 
         // Valid Parentheses        
-        // System.out.println("\nTesting Valid Parentheses:");
+        System.out.println("\nTesting Valid Parentheses:");
         String s1 = "()";
         String s2 = "()[]{}";
         String s3 = "(]";
         System.out.println("Is Valid (\"()\"): " + isValidParentheses(s1));
         System.out.println("Is Valid (\"()[]{}\"): " + isValidParentheses(s2));
         System.out.println("Is Valid (\"(]\"): " + isValidParentheses(s3));
+
+        // Test MinStack
+        System.out.println("\nTesting MinStack:");
+        MinStack minStack = new MinStack();
+        System.out.println("Push elements 3, 5, 2, 1 onto the MinStack.");
+        System.out.println("Pushing elements 3 and 5 onto the stack. in this order");
+        minStack.push(3);   
+        minStack.push(5);
+        System.out.println("Current Min: " + minStack.getMin()); // 3
+        System.out.println("Pushing elements 2 and 1 onto the stack. in this order");
+        minStack.push(2);
+        minStack.push(1);
+        System.out.println("Current Min: " + minStack.getMin()); // 1
+        System.out.println("Top element: " + minStack.top());    // 1
+        System.out.println("Popping top element.");
+        minStack.pop();
+        System.out.println("Current Min: " + minStack.getMin()); // 2
+        System.out.println("Top element: " + minStack.top());    // 2
     }
 
     // Validate parentheses using a Deque to match pairs
@@ -96,12 +135,12 @@ public class LearnStackQueue {
  * 
  * Space Complexity: O(n) where n is maxSize
  */
-class Stacks {
+class MyStack {
     private int maxSize;
     private int[] stackArray;
     private int top;
 
-    public Stacks(int size) {
+    public MyStack(int size) {
         this.maxSize = size;
         this.stackArray = new int[maxSize];
         this.top = -1; // -1 indicates empty stack
@@ -153,14 +192,14 @@ class Stacks {
  * 
  * Space Complexity: O(n) where n is maxSize
  */
-class Queues {
+class MyQueue {
     private int maxSize;
     private int[] queueArray;
     private int front;
     private int rear;
     private int nItems;
 
-    public Queues(int size) {
+    public MyQueue(int size) {
         this.maxSize = size;
         this.queueArray = new int[maxSize];
         this.front = 0;
@@ -239,10 +278,10 @@ class Queues {
  * This ensures the newest element is always at the front
  */
 class MyStackUsingSingleQueue {
-    private Queues queue;
+    private MyQueue queue;
 
     public MyStackUsingSingleQueue(int size) {
-        this.queue = new Queues(size);
+        this.queue = new MyQueue(size);
     }
 
     // Add element and rotate queue to maintain LIFO order
@@ -299,12 +338,12 @@ class MyStackUsingSingleQueue {
  * This ensures LIFO order using only queue operations
  */
 class MyStackUsingTwoQueues {
-    private Queues queue1;
-    private Queues queue2;
+    private MyQueue queue1;
+    private MyQueue queue2;
 
     public MyStackUsingTwoQueues(int size) {
-        this.queue1 = new Queues(size);
-        this.queue2 = new Queues(size);
+        this.queue1 = new MyQueue(size);
+        this.queue2 = new MyQueue(size);
     }
 
     // Add element to queue1
@@ -328,7 +367,7 @@ class MyStackUsingTwoQueues {
         int poppedValue = queue1.dequeue();
         
         // Swap queue references
-        Queues temp = queue1;
+        MyQueue temp = queue1;
         queue1 = queue2;
         queue2 = temp;
         
@@ -354,7 +393,7 @@ class MyStackUsingTwoQueues {
         queue2.enqueue(queue1.dequeue());
         
         // Swap queue references
-        Queues temp = queue1;
+        MyQueue temp = queue1;
         queue1 = queue2;
         queue2 = temp;
         
@@ -368,7 +407,7 @@ class MyStackUsingTwoQueues {
 }
 
 /**
- * Queue implementation using two stacks
+ * Queue implementation using two MyStack
  * enqueue: push onto stackNewest
  * dequeue: pop from stackOldest; if empty, transfer all elements from stackNewest to stackOldest first
  *
@@ -380,12 +419,12 @@ class MyStackUsingTwoQueues {
  * Space Complexity: O(n)
  */
 class MyQueueUsingStacks {
-    private Stacks stackNewest;
-    private Stacks stackOldest;
+    private MyStack stackNewest;
+    private MyStack stackOldest;
 
     public MyQueueUsingStacks(int size) {
-        this.stackNewest = new Stacks(size);
-        this.stackOldest = new Stacks(size);
+        this.stackNewest = new MyStack(size);
+        this.stackOldest = new MyStack(size);
     }
 
     // Add element to the end of the queue
@@ -427,3 +466,41 @@ class MyQueueUsingStacks {
         return stackNewest.isEmpty() && stackOldest.isEmpty();
     }
 }
+
+
+class MinStack {
+    private List<int[]> s;
+    public MinStack() {
+        this.s = new ArrayList<>();
+    }
+    
+    public void push(int val) {
+        if (this.s.isEmpty()) {
+            this.s.add(new int[]{val, val});
+        } else {
+            int minVal = Math.min(val, this.s.get(this.s.size() - 1)[1]);
+            this.s.add(new int[]{val, minVal});
+        }
+    }
+    
+    public void pop() {
+        this.s.remove(this.s.size() - 1);
+    }
+    
+    public int top() {
+        return this.s.get(this.s.size() - 1)[0];
+    }
+    
+    public int getMin() {
+        return this.s.get(this.s.size() - 1)[1];
+    }
+}
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack obj = new MinStack();
+ * obj.push(val);
+ * obj.pop();
+ * int param_3 = obj.top();
+ * int param_4 = obj.getMin();
+ */

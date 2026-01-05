@@ -274,3 +274,67 @@ console.log(isValid("{[]}")); // true
 // Space Complexity: O(n) in the worst case, when all characters are opening brackets.
 // Explanation:
 // We use a stack to keep track of opening brackets. For each character in the string, if it's an opening bracket, we push it onto the stack. If it's a closing bracket, we pop the top element from the stack and check if it matches the corresponding opening bracket. If there's a mismatch or if the stack is empty when we encounter a closing bracket, we return false. Finally, if the stack is empty after processing all characters, we return true, indicating that the parentheses are valid.
+
+var MinStack = function () {
+  this.s = [];
+};
+
+/**
+ * @param {number} val
+ * @return {void}
+ */
+MinStack.prototype.push = function (val) {
+  if (this.s.length === 0) {
+    this.s.push([val, val]);
+  } else {
+    // Math.min(last min current value)
+    let lastMinVal = this.s[this.s.length - 1][1];
+    let minVal = Math.min(val, lastMinVal);
+    this.s.push([val, minVal]);
+  }
+};
+
+/**
+ * @return {void}
+ */
+MinStack.prototype.pop = function () {
+  this.s.pop();
+};
+
+/**
+ * @return {number}
+ */
+MinStack.prototype.top = function () {
+  return this.s[this.s.length - 1][0];
+};
+
+/**
+ * @return {number}
+ */
+MinStack.prototype.getMin = function () {
+  return this.s[this.s.length - 1][1];
+};
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * var obj = new MinStack()
+ * obj.push(val)
+ * obj.pop()
+ * var param_3 = obj.top()
+ * var param_4 = obj.getMin()
+ */
+
+// Example usage:
+var minStack = new MinStack();
+minStack.push(-2);
+minStack.push(0);
+minStack.push(-3);
+console.log(minStack.getMin());
+minStack.pop();
+console.log(minStack.top());
+console.log(minStack.getMin());
+// Complexity Analysis:
+// Time Complexity: O(1) for all operations (push, pop, top, getMin).
+// Space Complexity: O(n) where n is the number of elements in the stack.
+// Explanation:
+// We use a stack to store pairs of values: the actual value and the minimum value at that point in the stack. This allows us to retrieve the minimum value in constant time. When pushing a new value, we compare it with the current minimum and store the smaller of the two as the new minimum. The pop operation simply removes the top element, and both top and getMin operations return the respective values from the top pair in the stack.
