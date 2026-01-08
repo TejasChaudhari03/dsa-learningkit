@@ -38,8 +38,8 @@ public class LearnStackQueue2 {
 }
 class MyStackUsingTwoQueues {
     // Using two queue
-    Queue q1 = new LinkedList<>();
-    Queue q2 = new LinkedList<>();
+    Queue<Integer> q1 = new LinkedList<>();
+    Queue<Integer> q2 = new LinkedList<>();
 
     public MyStackUsingTwoQueues() {
         
@@ -53,8 +53,8 @@ class MyStackUsingTwoQueues {
         while (q1.size() > 1) {
             q2.offer(q1.poll());
         }
-        int ans = (int) q1.poll();
-        Queue temp = q1;
+        int ans = q1.poll();
+        Queue<Integer> temp = q1;
         q1 = q2;
         q2 = temp;
         return ans;
@@ -64,9 +64,9 @@ class MyStackUsingTwoQueues {
         while (q1.size() > 1) {
             q2.offer(q1.poll());
         }
-        int front = (int) q1.poll();
+        int front = q1.poll();
         q2.offer(front);
-        Queue temp = q1;
+        Queue<Integer> temp = q1;
         q1 = q2;
         q2 = temp;
         return front;        
@@ -78,7 +78,7 @@ class MyStackUsingTwoQueues {
 }
 class MyStackUsingSingleQueue {
     // Using single queue
-    Queue q = new LinkedList<>();
+    Queue<Integer> q = new LinkedList<>();
 
     public MyStackUsingSingleQueue() {
         
@@ -93,7 +93,7 @@ class MyStackUsingSingleQueue {
         for (int i = 0; i < n - 1; i++) {
             q.offer(q.poll());
         }
-        return (int) q.poll();
+        return q.poll();
     }
     
     public int top() {
@@ -101,7 +101,7 @@ class MyStackUsingSingleQueue {
         for (int i = 0; i < n - 1; i++) {
             q.offer(q.poll());
         }
-        int front = (int) q.poll();
+        int front = q.poll();
         q.offer(front);
         return  front;        
     }
@@ -122,8 +122,8 @@ class MyStackUsingSingleQueue {
  */
 
 class MyQueue {
-    Stack s1 = new Stack<>();
-    Stack s2 = new Stack<>();
+    Stack<Integer> s1 = new Stack<>();
+    Stack<Integer> s2 = new Stack<>();
 
     public MyQueue() {
     }
@@ -138,7 +138,7 @@ class MyQueue {
                 s2.push(s1.pop());
             }
         }
-        return (int) s2.pop();        
+        return s2.pop();        
     }
     
     public int peek() {
@@ -147,7 +147,7 @@ class MyQueue {
                 s2.push(s1.pop());
             }
         }
-        return (int) s2.peek();        
+        return s2.peek();        
     }
     
     public boolean empty() {

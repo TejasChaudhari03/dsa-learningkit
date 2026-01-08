@@ -275,6 +275,8 @@ console.log(isValid("{[]}")); // true
 // Explanation:
 // We use a stack to keep track of opening brackets. For each character in the string, if it's an opening bracket, we push it onto the stack. If it's a closing bracket, we pop the top element from the stack and check if it matches the corresponding opening bracket. If there's a mismatch or if the stack is empty when we encounter a closing bracket, we return false. Finally, if the stack is empty after processing all characters, we return true, indicating that the parentheses are valid.
 
+// Min Stack - Using Stack of Pairs to Keep Track of Minimums
+
 var MinStack = function () {
   this.s = [];
 };
@@ -338,3 +340,105 @@ console.log(minStack.getMin());
 // Space Complexity: O(n) where n is the number of elements in the stack.
 // Explanation:
 // We use a stack to store pairs of values: the actual value and the minimum value at that point in the stack. This allows us to retrieve the minimum value in constant time. When pushing a new value, we compare it with the current minimum and store the smaller of the two as the new minimum. The pop operation simply removes the top element, and both top and getMin operations return the respective values from the top pair in the stack.
+
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var removeOuterParenthesesUsingStack = function (s) {
+  let stack = [];
+  let ans = "";
+
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] === "(") {
+      stack.push(s[i]);
+      ans += stack.length > 1 ? s[i] : "";
+    } else {
+      ans += stack.length > 1 ? s[i] : "";
+      stack.pop();
+    }
+  }
+
+  return ans;
+};
+// Example usage:
+console.log(removeOuterParenthesesUsingStack("(()())(())")); // "()()()"
+console.log(removeOuterParenthesesUsingStack("(()())(())(()(()))")); // "()()()()(())"
+console.log(removeOuterParenthesesUsingStack("()()")); // ""
+// Complexity Analysis:
+// Time Complexity: O(n), where n is the length of the string s.
+// Space Complexity: O(n) in the worst case, when all characters are opening brackets.
+// Explanation:
+// We use a stack to keep track of the depth of nested parentheses. For each character in the string, if it's an opening bracket, we push it onto the stack and add it to the result string only if the stack size is greater than 1 (indicating it's not an outermost bracket). If it's a closing bracket, we add it to the result string only if the stack size is greater than 1 before popping from the stack. This way, we effectively remove the outermost parentheses from each primitive substring.
+
+// Remove Outermost Parentheses - Using Level Counter
+var removeOuterParenthesesUsingLevel = function (s) {
+  let level = -1;
+  let ans = "";
+
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] === "(") {
+      ++level;
+      ans += level ? s[i] : "";
+    } else {
+      ans += level ? s[i] : "";
+      --level;
+    }
+  }
+
+  return ans;
+};
+// Example usage:
+console.log(removeOuterParenthesesUsingLevel("(()())(())")); // "()()()"
+console.log(removeOuterParenthesesUsingLevel("(()())(())(()(()))")); // "()()()()(())"
+console.log(removeOuterParenthesesUsingLevel("()()")); // ""
+// Complexity Analysis:
+// Time Complexity: O(n), where n is the length of the string s.
+// Space Complexity: O(n) in the worst case, when all characters are opening brackets.
+// Explanation:
+// We use a level counter to keep track of the depth of nested parentheses. For each character in the string, if it's an opening bracket, we increment the level and add it to the result string only if the level is greater than 0 (indicating it's not an outermost bracket). If it's a closing bracket, we add it to the result string only if the level is greater than 0 before decrementing the level. This way, we effectively remove the outermost parentheses from each primitive substring.
+
+// Evaluate Reverse Polish Notation - RPN
+
+/**
+ * @param {string[]} tokens
+ * @return {number}
+ */
+var evalRPN = function (tokens) {
+  let stack = [];
+  const map = {
+    "+": (a, b) => b + a,
+    "-": (a, b) => b - a,
+    "*": (a, b) => b * a,
+    "/": (a, b) => Math.trunc(b / a),
+  };
+  for (let i = 0; i < tokens.length; i++) {
+    // if(tokens[i] === "+" || tokens[i] === "-" || tokens[i] === "*" || tokens[i] === "/"){
+    // if(["+","-","*","/"].includes[tokens[i]]){
+    if (map[tokens[i]]) {
+      let a = stack.pop();
+      let b = stack.pop();
+      // let ans = eval(`${b} ${tokens[i]} ${a}`);
+      // let ans = map[tokens[i]](Number(a),Number(b));
+      let ans = map[tokens[i]](+a, +b);
+      stack.push(Math.trunc(ans));
+    } else {
+      stack.push(tokens[i]);
+    }
+  }
+
+  // return Number(stack.pop());
+  return Number(stack[0]);
+};
+
+// Example usage:
+console.log(evalRPN(["2", "1", "+", "3", "*"])); // 9
+console.log(evalRPN(["4", "13", "5", "/", "+"])); // 6
+console.log(
+  evalRPN(["10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"])
+); // 22
+// Complexity Analysis:
+// Time Complexity: O(n), where n is the number of tokens.
+// Space Complexity: O(n) in the worst case, when all tokens are numbers.
+// Explanation:
+// We use a stack to evaluate the RPN expression. For each token, if it's a number, we push it onto the stack. If it's an operator, we pop the top two numbers from the stack, apply the operator, and push the result back onto the stack. At the end, the stack contains the final result of the RPN expression.

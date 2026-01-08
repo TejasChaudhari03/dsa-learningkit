@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.function.BiFunction;
 
 public class LearnStackQueue {
     public static void main(String[] args) {
@@ -99,6 +100,30 @@ public class LearnStackQueue {
         minStack.pop();
         System.out.println("Current Min: " + minStack.getMin()); // 2
         System.out.println("Top element: " + minStack.top());    // 2
+
+
+        // Remove Outer Parentheses
+        System.out.println("\nTesting Remove Outer Parentheses:");
+        String s4 = "(()())(())";
+        String s5 = "(()())(())(()(()))";
+        System.out.println("Original: " + s4 + " | After Removal (Stack): " + removeOuterParenthesesUsingStack(s4));
+        System.out.println("Original: " + s5 + " | After Removal (Level): " + removeOuterParenthesesUsingLevel(s5));
+
+        // Remove Outer Parentheses using Level Tracking
+        System.out.println("\nTesting Remove Outer Parentheses using Level Tracking:");
+        System.out.println("Original: " + s4 + " | After Removal (Level): " + removeOuterParenthesesUsingLevel(s4));
+        System.out.println("Original: " + s5 + " | After Removal (Level): " + removeOuterParenthesesUsingLevel(s5));
+
+        // Evaluate Reverse Polish Notation
+        System.out.println("\nTesting Evaluate Reverse Polish Notation:");
+        String[] tokens = {"2", "1", "+", "3", "*"};
+        System.out.println("Tokens: [\"2\", \"1\", \"+\", \"3\", \"*\"] | Evaluated Result: " + evalRPN(tokens)); // 9
+        String[] tokens2 = {"4", "13", "5", "/", "+"};
+        System.out.println("Tokens: [\"4\", \"13\", \"5\", \"/\", \"+\"] | Evaluated Result: " + evalRPN(tokens2)); // 6
+        String[] tokens3 = {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
+        System.out.println("Tokens: [\"10\", \"6\", \"9\", \"3\", \"+\", \"-11\", \"*\", \"/\", \"*\", \"17\", \"+\", \"5\", \"+\"] | Evaluated Result: " + evalRPN(tokens3)); // 22
+
+
     }
 
     // Validate parentheses using a Deque to match pairs
@@ -121,6 +146,68 @@ public class LearnStackQueue {
         }
         return stack.isEmpty();
     }
+    // Complexity Analysis:
+    // Time Complexity: O(n), where n is the length of the string s.
+    // Space Complexity: O(n) in the worst case, when all characters are opening brackets.
+
+    // Remove outer parentheses using stack
+    public static String removeOuterParenthesesUsingStack(String s) {
+        Stack<Character> stack = new Stack<>();
+        StringBuilder ans = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                stack.push('(');
+                if (stack.size() > 1) ans.append('(');
+            } else {
+                if (stack.size() > 1) ans.append(')');
+                stack.pop();
+            }
+        }
+        return ans.toString();
+    }
+
+
+    // Remove outer parentheses using level tracking
+    public static String removeOuterParenthesesUsingLevel(String s) {
+        int level = -1;
+        StringBuilder ans = new StringBuilder();
+        for(int i = 0; i < s.length(); i++) {
+            if(s.charAt(i) == '(') {
+                ++level;
+                if(level != 0) ans.append(s.charAt(i));
+            } else {
+                if(level != 0) ans.append(s.charAt(i));
+                --level;
+            }
+        }
+        return ans.toString();
+    }
+    // Complexity Analysis:
+    // Time Complexity: O(n), where n is the length of the string s.
+    // Space Complexity: O(n) in the worst case, when all characters are opening brackets.
+
+
+    // Evaluate Reverse Polish Notation
+    public static int evalRPN(String[] tokens) {
+        Stack<Integer> stack = new Stack<>();
+        Map<String, BiFunction<Integer, Integer, Integer>> map = new HashMap<>();
+        map.put("+", (x, y) -> y + x);
+        map.put("-", (x, y) -> y - x);
+        map.put("*", (x, y) -> y * x);
+        map.put("/", (x, y) -> y / x);
+        for (int i = 0; i < tokens.length; i++) {
+            if (map.containsKey(tokens[i])) {
+                int a = stack.pop();
+                int b = stack.pop();
+                int ans = map.get(tokens[i]).apply(a, b);
+                stack.push(ans);
+            } else {
+                stack.push(Integer.parseInt(tokens[i]));
+            }
+        }
+        return stack.pop();
+    }
+
 }
 
 /**
