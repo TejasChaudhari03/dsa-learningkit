@@ -25,7 +25,7 @@ public class LearnStackQueue2 {
         System.out.println(myStack2.pop());   // return 2
         System.out.println(myStack2.empty()); // return false
 
-        MyQueue myQueue = new MyQueue();
+        MyQueues myQueue = new MyQueues();
         System.out.println("Using MyQueue");
         System.out.println("Pushing elements 1 and 2 onto the queue. in this order");
         myQueue.push(1);
@@ -121,11 +121,11 @@ class MyStackUsingSingleQueue {
  * boolean param_4 = obj.empty();
  */
 
-class MyQueue {
+class MyQueues {
     Stack<Integer> s1 = new Stack<>();
     Stack<Integer> s2 = new Stack<>();
 
-    public MyQueue() {
+    public MyQueues() {
     }
     
     public void push(int x) {

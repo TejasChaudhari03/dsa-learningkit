@@ -442,3 +442,157 @@ console.log(
 // Space Complexity: O(n) in the worst case, when all tokens are numbers.
 // Explanation:
 // We use a stack to evaluate the RPN expression. For each token, if it's a number, we push it onto the stack. If it's an operator, we pop the top two numbers from the stack, apply the operator, and push the result back onto the stack. At the end, the stack contains the final result of the RPN expression.
+
+// Next Greater Element I
+
+/**
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @return {number[]}
+ */
+var nextGreaterElement = function (nums1, nums2) {
+  let ngeMap = {};
+  let stack = [];
+  let n = nums2.length;
+  stack.push(nums2[n - 1]);
+  ngeMap[nums2[n - 1]] = -1;
+
+  for (let i = n - 2; i >= 0; i--) {
+    while (stack.length) {
+      if (stack[stack.length - 1] < nums2[i]) {
+        stack.pop();
+      } else {
+        ngeMap[nums2[i]] = stack[stack.length - 1];
+        break;
+      }
+    }
+    if (stack.length === 0) {
+      ngeMap[nums2[i]] = -1;
+    }
+    stack.push(nums2[i]);
+  }
+  /*     let ans = [];
+    for(let i =0 ; i<nums1.length ; i++){
+        ans.push(ngeMap[nums1[i]]);
+    }
+
+    return ans; */
+  return nums1.map((x) => ngeMap[x]);
+};
+
+// Example usage:
+console.log(nextGreaterElement([4, 1, 2], [1, 3, 4, 2])); // [-1,3,-1]
+console.log(nextGreaterElement([2, 4], [1, 2, 3, 4])); // [3,-1]
+// Complexity Analysis:
+// Time Complexity: O(m + n), where m is the length of nums1 and n is the length of nums2.
+// Space Complexity: O(n) for the ngeMap and stack.
+// Explanation:
+// We use a stack to keep track of the next greater elements in nums2. We iterate through nums2 from right to left, maintaining a mapping of each element to its next greater element. For each element, we pop elements from the stack until we find a greater element or the stack becomes empty. We then store the next greater element in the map. Finally, we construct the result for nums1 by looking up each element in the map.
+
+// Daily Temperatures
+/**
+ * @param {number[]} temperatures
+ * @return {number[]}
+ */
+var dailyTemperatures = function (temperatures) {
+  let stack = [];
+  let n = temperatures.length;
+  let ans = Array(n).fill(0);
+
+  stack.push(n - 1);
+  for (let i = n - 2; i >= 0; i--) {
+    while (stack.length) {
+      let top = stack[stack.length - 1];
+      if (temperatures[i] >= temperatures[top]) {
+        stack.pop();
+      } else {
+        ans[i] = top - i;
+        break;
+      }
+    }
+    stack.push(i);
+  }
+
+  return ans;
+};
+
+// Example usage:
+console.log(dailyTemperatures([73, 74, 75, 71, 69, 72, 76, 73])); // [1,1,4,2,1,1,0,0]
+console.log(dailyTemperatures([30, 40, 50, 60])); // [1,1,1,0]
+console.log(dailyTemperatures([30, 60, 90])); // [1,1,0]
+// Complexity Analysis:
+// Time Complexity: O(n), where n is the length of temperatures.
+// Space Complexity: O(n) for the stack and answer array.
+// Explanation:
+// We use a stack to keep track of the indices of the temperatures. We iterate through the temperatures from right to left. For each temperature, we pop elements from the stack until we find a warmer temperature or the stack becomes empty. If we find a warmer temperature, we calculate the number of days until that temperature and store it in the answer array. Finally, we push the current index onto the stack. This approach ensures that we efficiently find the next warmer temperature for each day.
+
+// Next Greater Element II using Stack of Doubled Array
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+var nextGreaterElementsUsingDoubledArray = function (nums) {
+  let arr = [...nums, ...nums];
+  let n = arr.length;
+  let stack = [];
+  let ans = Array(n).fill(-1);
+  stack.push(arr[n - 1]);
+
+  for (let i = n - 2; i >= 0; i--) {
+    while (stack.length) {
+      let top = stack[stack.length - 1];
+      if (arr[i] < top) {
+        ans[i] = top;
+        break;
+      } else {
+        stack.pop();
+      }
+    }
+    stack.push(arr[i]);
+  }
+
+  return ans.slice(0, n / 2);
+};
+// Example usage:
+console.log(nextGreaterElementsUsingDoubledArray([1, 2, 1])); // [2,-1,2]
+console.log(nextGreaterElementsUsingDoubledArray([5, 4, 3, 2, 1])); // [-1,5,5,5,5]
+// Complexity Analysis:
+// Time Complexity: O(n), where n is the length of the string s. for each character, we perform a constant time operation.
+// Space Complexity: O(n) in the worst case, when all characters are opening brackets.
+// Explanation:
+// We use a stack to keep track of the next greater elements in a circular manner. We simulate the circular nature by concatenating the array with itself. We iterate through the extended array from right to left, maintaining a mapping of each element to its next greater element. For each element, we pop elements from the stack until we find a greater element or the stack becomes empty. We then store the next greater element in the answer array. Finally, we return the first half of the answer array, which corresponds to the original array.
+
+// Next Greater Element II using Modulo || using Circular Indexing
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+var nextGreaterElementsUsingModulo = function (nums) {
+  let n = nums.length;
+  let stack = [];
+  let ans = Array(n).fill(-1);
+  stack.push(nums[n - 1]);
+
+  for (let i = 2 * n - 2; i >= 0; i--) {
+    while (stack.length) {
+      let top = stack[stack.length - 1];
+      if (nums[i % n] < top) {
+        ans[i % n] = top;
+        break;
+      } else {
+        stack.pop();
+      }
+    }
+    stack.push(nums[i % n]);
+  }
+
+  return ans.slice(0, n);
+};
+// Example usage:
+console.log(nextGreaterElementsUsingModulo([1, 2, 1])); // [2,-1,2]
+console.log(nextGreaterElementsUsingModulo([5, 4, 3, 2, 1])); // [-1,5,5,5,5]
+// Complexity Analysis:
+// Time Complexity: O(n), where n is the length of the string s. for each character, we perform a constant time operation.
+// Space Complexity: O(n) in the worst case, when all characters are opening brackets.
+// Explanation:
+// We use a stack to keep track of the next greater elements in a circular manner. We simulate the circular nature by iterating through the array twice using modulo indexing. We iterate from right to left, maintaining a mapping of each element to its next greater element. For each element, we pop elements from the stack until we find a greater element or the stack becomes empty. We then store the next greater element in the answer array. Finally, we return the answer array, which corresponds to the original array.
