@@ -3,8 +3,10 @@ package JavaPrograms;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Stack;
 import java.util.function.BiFunction;
 
@@ -174,6 +176,21 @@ public class LearnStackQueue {
             }
         }
 
+        System.out.println();
+        // Rotting Oranges
+        System.out.println("\nTesting Rotting Oranges:");
+        int[][] grid = {
+            {2,1,1},
+            {1,1,0},
+            {0,1,1}
+        };
+        int minutes = orangesRotting(grid);
+        System.out.println("Grid:");
+        for (int[] grid1 : grid) {
+            System.out.println(Arrays.toString(grid1));
+        }
+        System.out.println("Minutes until all oranges rot: " + minutes);
+
     }
 
     // Validate parentheses using a Deque to match pairs
@@ -269,7 +286,7 @@ public class LearnStackQueue {
                 int ans = map.get(token).apply(a, b);
                 stack.push(ans);
             } else {
-                stack.push(Integer.parseInt(token));
+                stack.push(Integer.valueOf(token));
             }
         }
         /*
@@ -440,6 +457,55 @@ public class LearnStackQueue {
     // Space Complexity: O(n) in the worst case, when all characters are opening brackets.
     // Explanation:
     // We use a stack to keep track of the next greater elements in a circular manner. We simulate the circular nature by iterating through the array twice using modulo indexing. We iterate from right to left, maintaining a mapping of each element to its next greater element. For each element, we pop elements from the stack until we find a greater element or the stack becomes empty. We then store the next greater element in the answer array. Finally, we return the answer array, which corresponds to the original array.
+
+    // Rotting Oranges
+    public static int orangesRotting(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        Queue<int[]> queue = new LinkedList<>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 2) {
+                    queue.add(new int[]{i, j, 0});
+                }
+            }
+        }
+        int maxMinutes = 0;
+        while (!queue.isEmpty()) {
+            int[] curr = queue.poll();
+            int x = curr[0], y = curr[1], level = curr[2];
+
+            if (x > 0 && grid[x - 1][y] == 1) {
+                grid[x - 1][y] = 2;
+                queue.add(new int[]{x - 1, y, level + 1});
+            }
+            if (x < m - 1 && grid[x + 1][y] == 1) {
+                grid[x + 1][y] = 2;
+                queue.add(new int[]{x + 1, y, level + 1});
+            }
+            if (y < n - 1 && grid[x][y + 1] == 1) {
+                grid[x][y + 1] = 2;
+                queue.add(new int[]{x, y + 1, level + 1});
+            }
+            if (y > 0 && grid[x][y - 1] == 1) {
+                grid[x][y - 1] = 2;
+                queue.add(new int[]{x, y - 1, level + 1});
+            }
+            maxMinutes = Math.max(level, maxMinutes);
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) return -1;
+            }
+        }
+        
+        return maxMinutes;
+    }
+    // Complexity Analysis:
+    // Time Complexity: O(m * n), where m is the number of rows and n is the number of columns in the grid. Each cell is processed at most once.
+    // Space Complexity: O(m * n) in the worst case, when all cells are rotten oranges and added to the queue.
+    // Explanation: We use a queue to perform a breadth-first search (BFS) starting from all initially rotten oranges. We enqueue their positions and the time level (minutes). For each rotten orange, we check its four adjacent cells. If any of them contain a fresh orange, we rot it and enqueue its position with an incremented time level. We keep track of the maximum time level reached during the BFS. After processing, we check if any fresh oranges remain; if so, we return -1. Otherwise, we return the maximum time level as the result.
+
 }
 
 /**
@@ -453,8 +519,8 @@ public class LearnStackQueue {
  */
 class MyStack {
 
-    private int maxSize;
-    private int[] stackArray;
+    private final int maxSize;
+    private final int[] stackArray;
     private int top;
 
     public MyStack(int size) {
@@ -508,8 +574,8 @@ class MyStack {
  */
 class MyQueue {
 
-    private int maxSize;
-    private int[] queueArray;
+    private final int maxSize;
+    private final int[] queueArray;
     private int front;
     private int rear;
     private int nItems;
@@ -589,7 +655,7 @@ class MyQueue {
  */
 class MyStackUsingSingleQueue {
 
-    private MyQueue queue;
+    private final MyQueue queue;
 
     public MyStackUsingSingleQueue(int size) {
         this.queue = new MyQueue(size);
@@ -726,8 +792,8 @@ class MyStackUsingTwoQueue {
  */
 class MyQueueUsingStack{
 
-    private MyStack stackNewest;
-    private MyStack stackOldest;
+    private final MyStack stackNewest;
+    private final MyStack stackOldest;
 
     public MyQueueUsingStack(int size) {
         this.stackNewest = new MyStack(size);
@@ -776,7 +842,7 @@ class MyQueueUsingStack{
 
 class MinStack {
 
-    private List<int[]> s;
+    private final List<int[]> s;
 
     public MinStack() {
         this.s = new ArrayList<>();

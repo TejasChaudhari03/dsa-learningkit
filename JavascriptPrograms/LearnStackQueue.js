@@ -435,7 +435,21 @@ var evalRPN = function (tokens) {
 console.log(evalRPN(["2", "1", "+", "3", "*"])); // 9
 console.log(evalRPN(["4", "13", "5", "/", "+"])); // 6
 console.log(
-  evalRPN(["10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"])
+  evalRPN([
+    "10",
+    "6",
+    "9",
+    "3",
+    "+",
+    "-11",
+    "*",
+    "/",
+    "*",
+    "17",
+    "+",
+    "5",
+    "+",
+  ]),
 ); // 22
 // Complexity Analysis:
 // Time Complexity: O(n), where n is the number of tokens.
@@ -596,3 +610,78 @@ console.log(nextGreaterElementsUsingModulo([5, 4, 3, 2, 1])); // [-1,5,5,5,5]
 // Space Complexity: O(n) in the worst case, when all characters are opening brackets.
 // Explanation:
 // We use a stack to keep track of the next greater elements in a circular manner. We simulate the circular nature by iterating through the array twice using modulo indexing. We iterate from right to left, maintaining a mapping of each element to its next greater element. For each element, we pop elements from the stack until we find a greater element or the stack becomes empty. We then store the next greater element in the answer array. Finally, we return the answer array, which corresponds to the original array.
+
+// Rotting Oranges
+/**
+ * @param {number[][]} grid
+ * @return {number}
+ */
+/*
+[ [2,1,1],
+  [1,1,0],
+  [0,1,1] ]
+*/
+var orangesRotting = function (grid) {
+  let rows = grid.length;
+  let cols = grid[0].length;
+  let queue = [];
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      if (grid[i][j] === 2) {
+        queue.push([i, j, 0]);
+      }
+    }
+  }
+  let maxMinutes = 0;
+  while (queue.length) {
+    let [x, y, level] = queue.shift();
+
+    if (x > 0 && grid[x - 1][y] === 1) {
+      grid[x - 1][y] = 2;
+      queue.push([x - 1, y, level + 1]);
+    }
+    if (x < m - 1 && grid[x + 1][y] === 1) {
+      grid[x + 1][y] = 2;
+      queue.push([x + 1, y, level + 1]);
+    }
+    if (y < n - 1 && grid[x][y + 1] === 1) {
+      grid[x][y + 1] = 2;
+      queue.push([x, y + 1, level + 1]);
+    }
+    if (y > 0 && grid[x][y - 1] === 1) {
+      grid[x][y - 1] = 2;
+      queue.push([x, y - 1, level + 1]);
+    }
+    maxMinutes = Math.max(level, maxMinutes);
+  }
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid[i][j] === 1) {
+        return -1;
+      }
+    }
+  }
+  return maxMinutes;
+};
+
+// Example usage:
+console.log(
+  orangesRotting([
+    [2, 1, 1],
+    [1, 1, 0],
+    [0, 1, 1],
+  ]),
+); // 4
+console.log(
+  orangesRotting([
+    [2, 1, 1],
+    [0, 1, 1],
+    [1, 0, 1],
+  ]),
+); // -1
+
+// Complexity Analysis:
+// Time Complexity: O(m * n), where m is the number of rows and n is the number of columns in the grid.
+// Space Complexity: O(m * n) in the worst case, when all oranges are rotten and added to the queue.
+// Explanation:
+// We use a breadth-first search (BFS) approach to simulate the rotting process of oranges. We start by adding all initially rotten oranges to the queue. For each rotten orange, we check its adjacent cells (up, down, left, right) and rot any fresh oranges found there, adding them to the queue with an incremented time level. We keep track of the maximum time taken to rot all reachable fresh oranges. After processing all oranges, we check if any fresh oranges remain; if so, we return -1. Otherwise, we return the maximum time taken.
