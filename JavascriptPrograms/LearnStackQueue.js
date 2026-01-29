@@ -70,8 +70,8 @@ console.log(myStack.empty()); // returns false
 
 // Explanation:
 // We use a single queue to simulate stack behavior. For push, we simply enqueue the element.
-// For pop and top, we rotate the queue to bring the last added element to the front, allowing us to dequeue it (for pop) or peek at it (for top). The empty function checks if the queue is empty.
-// This approach ensures that we adhere to the stack's LIFO principle using only queue operations.
+// For pop and top, we rotate the queue to bring the last added element to the front, allowing us to dequeue it (for pop) or peek at it (for top).
+// The empty function checks if the queue is empty.This approach ensures that we adhere to the stack's LIFO principle using only queue operations.
 
 /*
 Implement a last-in-first-out (LIFO) stack using only two queues. The implemented stack should support all the functions of a normal stack (push, top, pop, and empty).
@@ -155,8 +155,8 @@ console.log(myStackTwoQueues.empty()); // returns false
 
 // Explanation:
 // We use two queues to simulate stack behavior. For push, we simply enqueue the element into the first queue.
-// For pop and top, we transfer all but the last element from the first queue to the second queue, allowing us to dequeue the last added element (for pop) or peek at it (for top). After that, we swap the roles of the two queues.
-// The empty function checks if the first queue is empty.
+// For pop and top, we transfer all but the last element from the first queue to the second queue, allowing us to dequeue the last added element (for pop) or peek at it (for top).
+// After that, we swap the roles of the two queues. The empty function checks if the first queue is empty.
 // This approach ensures that we adhere to the stack's LIFO principle using only queue operations.
 
 /*
@@ -229,8 +229,8 @@ console.log(myQueue.empty()); // returns false
 // Space Complexity: O(n) where n is the number of elements in the queue.
 // Explanation:
 // We use two stacks to simulate queue behavior. For push, we simply push the element onto the first stack.
-// For pop and peek, if the second stack is empty, we transfer all elements from the first stack to the second stack, reversing their order. This allows us to pop or peek at the front element of the queue.
-// The empty function checks if both stacks are empty.
+// For pop and peek, if the second stack is empty, we transfer all elements from the first stack to the second stack, reversing their order.
+// This allows us to pop or peek at the front element of the queue. The empty function checks if both stacks are empty.
 // This approach ensures that we adhere to the queue's FIFO principle using only stack operations.
 
 // Valid Pareentheses
@@ -273,7 +273,10 @@ console.log(isValid("{[]}")); // true
 // Time Complexity: O(n), where n is the length of the string s.
 // Space Complexity: O(n) in the worst case, when all characters are opening brackets.
 // Explanation:
-// We use a stack to keep track of opening brackets. For each character in the string, if it's an opening bracket, we push it onto the stack. If it's a closing bracket, we pop the top element from the stack and check if it matches the corresponding opening bracket. If there's a mismatch or if the stack is empty when we encounter a closing bracket, we return false. Finally, if the stack is empty after processing all characters, we return true, indicating that the parentheses are valid.
+// We use a stack to keep track of opening brackets. For each character in the string, if it's an opening bracket, we push it onto the stack.
+// If it's a closing bracket, we pop the top element from the stack and check if it matches the corresponding opening bracket.
+// If there's a mismatch or if the stack is empty when we encounter a closing bracket, we return false.
+// Finally, if the stack is empty after processing all characters, we return true, indicating that the parentheses are valid.
 
 // Min Stack - Using Stack of Pairs to Keep Track of Minimums
 
@@ -339,7 +342,9 @@ console.log(minStack.getMin());
 // Time Complexity: O(1) for all operations (push, pop, top, getMin).
 // Space Complexity: O(n) where n is the number of elements in the stack.
 // Explanation:
-// We use a stack to store pairs of values: the actual value and the minimum value at that point in the stack. This allows us to retrieve the minimum value in constant time. When pushing a new value, we compare it with the current minimum and store the smaller of the two as the new minimum. The pop operation simply removes the top element, and both top and getMin operations return the respective values from the top pair in the stack.
+// We use a stack to store pairs of values: the actual value and the minimum value at that point in the stack.
+// This allows us to retrieve the minimum value in constant time. When pushing a new value, we compare it with the current minimum and store the smaller of the two as the new minimum.
+// The pop operation simply removes the top element, and both top and getMin operations return the respective values from the top pair in the stack.
 
 /**
  * @param {string} s
@@ -369,7 +374,9 @@ console.log(removeOuterParenthesesUsingStack("()()")); // ""
 // Time Complexity: O(n), where n is the length of the string s.
 // Space Complexity: O(n) in the worst case, when all characters are opening brackets.
 // Explanation:
-// We use a stack to keep track of the depth of nested parentheses. For each character in the string, if it's an opening bracket, we push it onto the stack and add it to the result string only if the stack size is greater than 1 (indicating it's not an outermost bracket). If it's a closing bracket, we add it to the result string only if the stack size is greater than 1 before popping from the stack. This way, we effectively remove the outermost parentheses from each primitive substring.
+// We use a stack to keep track of the depth of nested parentheses. For each character in the string, if it's an opening bracket,
+// we push it onto the stack and add it to the result string only if the stack size is greater than 1 (indicating it's not an outermost bracket).
+// If it's a closing bracket, we add it to the result string only if the stack size is greater than 1 before popping from the stack. This way, we effectively remove the outermost parentheses from each primitive substring.
 
 // Remove Outermost Parentheses - Using Level Counter
 var removeOuterParenthesesUsingLevel = function (s) {
@@ -396,7 +403,9 @@ console.log(removeOuterParenthesesUsingLevel("()()")); // ""
 // Time Complexity: O(n), where n is the length of the string s.
 // Space Complexity: O(n) in the worst case, when all characters are opening brackets.
 // Explanation:
-// We use a level counter to keep track of the depth of nested parentheses. For each character in the string, if it's an opening bracket, we increment the level and add it to the result string only if the level is greater than 0 (indicating it's not an outermost bracket). If it's a closing bracket, we add it to the result string only if the level is greater than 0 before decrementing the level. This way, we effectively remove the outermost parentheses from each primitive substring.
+// We use a level counter to keep track of the depth of nested parentheses. For each character in the string, if it's an opening bracket,
+// we increment the level and add it to the result string only if the level is greater than 0 (indicating it's not an outermost bracket).
+// If it's a closing bracket, we add it to the result string only if the level is greater than 0 before decrementing the level. This way, we effectively remove the outermost parentheses from each primitive substring.
 
 // Evaluate Reverse Polish Notation - RPN
 
@@ -455,7 +464,8 @@ console.log(
 // Time Complexity: O(n), where n is the number of tokens.
 // Space Complexity: O(n) in the worst case, when all tokens are numbers.
 // Explanation:
-// We use a stack to evaluate the RPN expression. For each token, if it's a number, we push it onto the stack. If it's an operator, we pop the top two numbers from the stack, apply the operator, and push the result back onto the stack. At the end, the stack contains the final result of the RPN expression.
+// We use a stack to evaluate the RPN expression. For each token, if it's a number, we push it onto the stack.
+// If it's an operator, we pop the top two numbers from the stack, apply the operator, and push the result back onto the stack. At the end, the stack contains the final result of the RPN expression.
 
 // Next Greater Element I
 
@@ -501,7 +511,9 @@ console.log(nextGreaterElement([2, 4], [1, 2, 3, 4])); // [3,-1]
 // Time Complexity: O(m + n), where m is the length of nums1 and n is the length of nums2.
 // Space Complexity: O(n) for the ngeMap and stack.
 // Explanation:
-// We use a stack to keep track of the next greater elements in nums2. We iterate through nums2 from right to left, maintaining a mapping of each element to its next greater element. For each element, we pop elements from the stack until we find a greater element or the stack becomes empty. We then store the next greater element in the map. Finally, we construct the result for nums1 by looking up each element in the map.
+// We use a stack to keep track of the next greater elements in nums2. We iterate through nums2 from right to left, maintaining a mapping of each element to its next greater element.
+// For each element, we pop elements from the stack until we find a greater element or the stack becomes empty.
+// We then store the next greater element in the map. Finally, we construct the result for nums1 by looking up each element in the map.
 
 // Daily Temperatures
 /**
@@ -538,7 +550,10 @@ console.log(dailyTemperatures([30, 60, 90])); // [1,1,0]
 // Time Complexity: O(n), where n is the length of temperatures.
 // Space Complexity: O(n) for the stack and answer array.
 // Explanation:
-// We use a stack to keep track of the indices of the temperatures. We iterate through the temperatures from right to left. For each temperature, we pop elements from the stack until we find a warmer temperature or the stack becomes empty. If we find a warmer temperature, we calculate the number of days until that temperature and store it in the answer array. Finally, we push the current index onto the stack. This approach ensures that we efficiently find the next warmer temperature for each day.
+// We use a stack to keep track of the indices of the temperatures. We iterate through the temperatures from right to left.
+// For each temperature, we pop elements from the stack until we find a warmer temperature or the stack becomes empty.
+// If we find a warmer temperature, we calculate the number of days until that temperature and store it in the answer array.
+// inally, we push the current index onto the stack. This approach ensures that we efficiently find the next warmer temperature for each day.
 
 // Next Greater Element II using Stack of Doubled Array
 /**
@@ -574,7 +589,10 @@ console.log(nextGreaterElementsUsingDoubledArray([5, 4, 3, 2, 1])); // [-1,5,5,5
 // Time Complexity: O(n), where n is the length of the string s. for each character, we perform a constant time operation.
 // Space Complexity: O(n) in the worst case, when all characters are opening brackets.
 // Explanation:
-// We use a stack to keep track of the next greater elements in a circular manner. We simulate the circular nature by concatenating the array with itself. We iterate through the extended array from right to left, maintaining a mapping of each element to its next greater element. For each element, we pop elements from the stack until we find a greater element or the stack becomes empty. We then store the next greater element in the answer array. Finally, we return the first half of the answer array, which corresponds to the original array.
+// We use a stack to keep track of the next greater elements in a circular manner. We simulate the circular nature by concatenating the array with itself.
+// We iterate through the extended array from right to left, maintaining a mapping of each element to its next greater element.
+// For each element, we pop elements from the stack until we find a greater element or the stack becomes empty.
+// We then store the next greater element in the answer array. Finally, we return the first half of the answer array, which corresponds to the original array.
 
 // Next Greater Element II using Modulo || using Circular Indexing
 /**
@@ -609,7 +627,9 @@ console.log(nextGreaterElementsUsingModulo([5, 4, 3, 2, 1])); // [-1,5,5,5,5]
 // Time Complexity: O(n), where n is the length of the string s. for each character, we perform a constant time operation.
 // Space Complexity: O(n) in the worst case, when all characters are opening brackets.
 // Explanation:
-// We use a stack to keep track of the next greater elements in a circular manner. We simulate the circular nature by iterating through the array twice using modulo indexing. We iterate from right to left, maintaining a mapping of each element to its next greater element. For each element, we pop elements from the stack until we find a greater element or the stack becomes empty. We then store the next greater element in the answer array. Finally, we return the answer array, which corresponds to the original array.
+// We use a stack to keep track of the next greater elements in a circular manner. We simulate the circular nature by iterating through the array twice using modulo indexing.
+// We iterate from right to left, maintaining a mapping of each element to its next greater element. For each element, we pop elements from the stack until we find a greater element or the stack becomes empty.
+// We then store the next greater element in the answer array. Finally, we return the answer array, which corresponds to the original array.
 
 // Rotting Oranges
 /**
@@ -684,4 +704,6 @@ console.log(
 // Time Complexity: O(m * n), where m is the number of rows and n is the number of columns in the grid.
 // Space Complexity: O(m * n) in the worst case, when all oranges are rotten and added to the queue.
 // Explanation:
-// We use a breadth-first search (BFS) approach to simulate the rotting process of oranges. We start by adding all initially rotten oranges to the queue. For each rotten orange, we check its adjacent cells (up, down, left, right) and rot any fresh oranges found there, adding them to the queue with an incremented time level. We keep track of the maximum time taken to rot all reachable fresh oranges. After processing all oranges, we check if any fresh oranges remain; if so, we return -1. Otherwise, we return the maximum time taken.
+// We use a breadth-first search (BFS) approach to simulate the rotting process of oranges. We start by adding all initially rotten oranges to the queue.
+// For each rotten orange, we check its adjacent cells (up, down, left, right) and rot any fresh oranges found there, adding them to the queue with an incremented time level.
+// We keep track of the maximum time taken to rot all reachable fresh oranges. After processing all oranges, we check if any fresh oranges remain; if so, we return -1. Otherwise, we return the maximum time taken.

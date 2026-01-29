@@ -184,8 +184,12 @@ public class LearnStackQueue {
             {1,1,0},
             {0,1,1}
         };
+        System.out.println("Before rotting:");
+        for (int[] grid1 : grid) {
+            System.out.println(Arrays.toString(grid1));
+        }
         int minutes = orangesRotting(grid);
-        System.out.println("Grid:");
+        System.out.println("After rotting: Grid state:");
         for (int[] grid1 : grid) {
             System.out.println(Arrays.toString(grid1));
         }
