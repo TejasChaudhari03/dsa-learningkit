@@ -644,38 +644,47 @@ console.log(nextGreaterElementsUsingModulo([5, 4, 3, 2, 1])); // [-1,5,5,5,5]
 var orangesRotting = function (grid) {
   let rows = grid.length;
   let cols = grid[0].length;
-  let queue = [];
+  let queue = []; // Explanation: We will use a queue to perform a breadth-first search (BFS) to simulate the rotting process of oranges.
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
       if (grid[i][j] === 2) {
+        // Explanation: We start by adding all initially rotten oranges to the queue.
         queue.push([i, j, 0]);
       }
     }
   }
   let maxMinutes = 0;
   while (queue.length) {
-    let [x, y, level] = queue.shift();
+    let [x, y, level] = queue.shift(); // Explanation: We dequeue an orange from the queue and check its adjacent cells (up, down, left, right).
+    // If any adjacent cell contains a fresh orange (1), we rot it (change it to 2) and add it to the queue with an incremented time level.
+    // We also keep track of the maximum time taken to rot all reachable fresh oranges.
+    // x->row , y->col, level->time
 
+    // Check all four adjacent cells
     if (x > 0 && grid[x - 1][y] === 1) {
+      // up
       grid[x - 1][y] = 2;
-      queue.push([x - 1, y, level + 1]);
+      queue.push([x - 1, y, level + 1]); // Increment time level
     }
-    if (x < m - 1 && grid[x + 1][y] === 1) {
+    if (x < rows - 1 && grid[x + 1][y] === 1) {
+      // down
       grid[x + 1][y] = 2;
-      queue.push([x + 1, y, level + 1]);
+      queue.push([x + 1, y, level + 1]); // Increment time level
     }
-    if (y < n - 1 && grid[x][y + 1] === 1) {
+    if (y < cols - 1 && grid[x][y + 1] === 1) {
+      // right
       grid[x][y + 1] = 2;
-      queue.push([x, y + 1, level + 1]);
+      queue.push([x, y + 1, level + 1]); // Increment time level
     }
     if (y > 0 && grid[x][y - 1] === 1) {
+      // left
       grid[x][y - 1] = 2;
-      queue.push([x, y - 1, level + 1]);
+      queue.push([x, y - 1, level + 1]); // Increment time level
     }
     maxMinutes = Math.max(level, maxMinutes);
   }
-  for (let i = 0; i < m; i++) {
-    for (let j = 0; j < n; j++) {
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
       if (grid[i][j] === 1) {
         return -1;
       }

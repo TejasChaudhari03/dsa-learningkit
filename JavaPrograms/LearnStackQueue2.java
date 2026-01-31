@@ -15,7 +15,7 @@ public class LearnStackQueue2 {
         System.out.println(myStack.pop());   // return 2
         System.out.println(myStack.empty()); // return false
     
-        MyStackUsingSingleQueue myStack2 = new MyStackUsingSingleQueue();
+        MyStackUsingSingleQueues myStack2 = new MyStackUsingSingleQueues();
         System.out.println("Using MyStackUsingSingleQueue");
         System.out.println("Pushing elements 1 and 2 onto the stack. in this order");
         myStack2.push(1);
@@ -76,11 +76,11 @@ class MyStackUsingTwoQueues {
         return q1.isEmpty();        
     }
 }
-class MyStackUsingSingleQueue {
+class MyStackUsingSingleQueues {
     // Using single queue
     Queue<Integer> q = new LinkedList<>();
 
-    public MyStackUsingSingleQueue() {
+    public MyStackUsingSingleQueues() {
         
     }
     

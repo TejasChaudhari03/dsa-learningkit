@@ -249,7 +249,8 @@ public class LearnStackQueue {
     // Complexity Analysis:
     // Time Complexity: O(n), where n is the length of the string s.
     // Space Complexity: O(n) in the worst case, when all characters are opening brackets.
-    // Explanation: We use a stack to track the depth of parentheses. When we encounter an opening parenthesis, we push it onto the stack. If the stack size is greater than 1, it means we are inside an outer parenthesis, so we append it to the result. For closing parentheses, we only append them if the stack size is greater than 1 before popping.
+    // Explanation: We use a stack to track the depth of parentheses. When we encounter an opening parenthesis, we push it onto the stack. 
+    // If the stack size is greater than 1, it means we are inside an outer parenthesis, so we append it to the result. For closing parentheses, we only append them if the stack size is greater than 1 before popping.
 
     // Remove outer parentheses using level tracking
     public static String removeOuterParenthesesUsingLevel(String s) {
@@ -273,7 +274,8 @@ public class LearnStackQueue {
     // Complexity Analysis:
     // Time Complexity: O(n), where n is the length of the string s.
     // Space Complexity: O(n) in the worst case, when all characters are opening brackets.
-    // Explanation: We use a level counter to track the depth of parentheses. When we encounter an opening parenthesis, we increment the level. If the level is not zero, it means we are inside an outer parenthesis, so we append it to the result. For closing parentheses, we only append them if the level is not zero before decrementing.
+    // Explanation: We use a level counter to track the depth of parentheses. When we encounter an opening parenthesis, we increment the level. 
+    // If the level is not zero, it means we are inside an outer parenthesis, so we append it to the result. For closing parentheses, we only append them if the level is not zero before decrementing.
 
     // Evaluate Reverse Polish Notation
     public static int evalRPN(String[] tokens) {
@@ -310,7 +312,8 @@ public class LearnStackQueue {
     // Complexity Analysis:
     // Time Complexity: O(n), where n is the number of tokens.
     // Space Complexity: O(n) in the worst case, when all tokens are numbers.
-    // Explanation: We use a stack to evaluate the RPN expression. For each token, if it's an operator, we pop the top two numbers from the stack, apply the operation, and push the result back onto the stack. If it's a number, we simply push it onto the stack. At the end, the stack contains the final result.
+    // Explanation: We use a stack to evaluate the RPN expression. For each token, if it's an operator, we pop the top two numbers from the stack, apply the operation, and push the result back onto the stack.
+    // If it's a number, we simply push it onto the stack. At the end, the stack contains the final result.
 
     // Next Greater Element I
     public static int[] nextGreaterElement(int[] nums1, int[] nums2) {
@@ -318,8 +321,8 @@ public class LearnStackQueue {
         Stack<Integer> stack = new Stack<>();
 
         int n = nums2.length;
-        stack.push(nums2[n - 1]);
-        ngeMap.put(nums2[n - 1], -1);
+        stack.push(nums2[n - 1]); // Explanation: Start by pushing the last element onto the stack to initialize it.
+        ngeMap.put(nums2[n - 1], -1); // The last element has no next greater element
 
         for (int i = n - 2; i >= 0; i--) {
             while (!stack.isEmpty()) {
@@ -345,7 +348,8 @@ public class LearnStackQueue {
     // Complexity Analysis:
     // Time Complexity: O(m + n), where m is the length of nums1 and n is the length of nums2.
     // Space Complexity: O(n) for the ngeMap and stack.
-    // Explanation: We use a stack to keep track of the next greater elements in nums2. We iterate through nums2 from right to left, and for each element, we pop elements from the stack until we find a greater element or the stack becomes empty. We store the next greater element in a map. Finally, we build the result for nums1 using this map.
+    // Explanation: We use a stack to keep track of the next greater elements in nums2. We iterate through nums2 from right to left, and for each element, we pop elements from the stack until we find a greater element or the stack becomes empty.
+    // We store the next greater element in a map. Finally, we build the result for nums1 using this map.
 
     // Daily Temperatures
     // Canonical / self-contained monotonic stack || dailyTemperaturesRightToLeft()
@@ -355,7 +359,7 @@ public class LearnStackQueue {
         Stack<Integer> stack = new Stack<>();
 
         for (int i = n - 1; i >= 0; i--) {
-            while (!stack.isEmpty() && temperatures[stack.peek()] <= temperatures[i]) {
+            while (!stack.isEmpty() && temperatures[stack.peek()] <= temperatures[i]) { // Pop until we find a warmer temperature
                 stack.pop();
             }
             if (!stack.isEmpty()) {
@@ -378,7 +382,7 @@ public class LearnStackQueue {
         int n = temperatures.length;
         int[] ans = new int[n];
         Stack<Integer> stack = new Stack<>();
-        stack.push(n-1);
+        stack.push(n-1); // Explanation: Start by pushing the last index onto the stack to initialize it.
         for(int i = n-2; i>=0; i--){
             while(!stack.isEmpty()){
                 int top = stack.peek();
@@ -430,7 +434,10 @@ public class LearnStackQueue {
     // Time Complexity: O(n) Each element is pushed to and popped from the stack at most once, where n is the length of the doubled array (2 * original length).
     // Space Complexity: O(n) Stack can hold up to n elements in the worst case (monotonic decreasing array), where n is the length of the doubled array (2 * original length).
     // Explanation:
-    // We use a stack to keep track of the next greater elements in a circular manner. We simulate the circular nature by doubling the array. We iterate from right to left, maintaining a mapping of each element to its next greater element. For each element, we pop elements from the stack until we find a greater element or the stack becomes empty. We then store the next greater element in the answer array. Finally, we return the first half of the answer array, which corresponds to the original array.
+    // We use a stack to keep track of the next greater elements in a circular manner. We simulate the circular nature by doubling the array. 
+    // We iterate from right to left, maintaining a mapping of each element to its next greater element. 
+    // For each element, we pop elements from the stack until we find a greater element or the stack becomes empty. We then store the next greater element in the answer array.
+    // Finally, we return the first half of the answer array, which corresponds to the original array.
 
 
 
@@ -441,13 +448,13 @@ public class LearnStackQueue {
         Stack<Integer> stack = new Stack<>();
 
         Arrays.fill(ans, -1);
-        stack.push(nums[n - 1]);
-        for(int i = 2 * n - 2; i >= 0; i--) {
+        stack.push(nums[n - 1]); // Explanation: Start by pushing the last element onto the stack to initialize it.
+        for(int i = 2 * n - 2; i >= 0; i--) { // Explanation: Iterate from the second last element of the doubled array down to the first element.
                 while(!stack.isEmpty()) {
                     int top = stack.peek();
                     if(nums[i % n] < top) {
                         ans[i % n] = top;
-                        break;
+                        break; // Found the next greater element if we don't break here, we would pop the next element and potentially overwrite the answer
                     } else {
                         stack.pop();
                     }
@@ -460,13 +467,16 @@ public class LearnStackQueue {
     // Time Complexity: O(n), where n is the length of the string s. for each character, we perform a constant time operation.
     // Space Complexity: O(n) in the worst case, when all characters are opening brackets.
     // Explanation:
-    // We use a stack to keep track of the next greater elements in a circular manner. We simulate the circular nature by iterating through the array twice using modulo indexing. We iterate from right to left, maintaining a mapping of each element to its next greater element. For each element, we pop elements from the stack until we find a greater element or the stack becomes empty. We then store the next greater element in the answer array. Finally, we return the answer array, which corresponds to the original array.
+    // We use a stack to keep track of the next greater elements in a circular manner. We simulate the circular nature by iterating through the array twice using modulo indexing.
+    // We iterate from right to left, maintaining a mapping of each element to its next greater element. For each element, we pop elements from the stack until we find a greater element or the stack becomes empty.
+    // We then store the next greater element in the answer array. Finally, we return the answer array, which corresponds to the original array.
 
     // Rotting Oranges
     public static int orangesRotting(int[][] grid) {
-        int m = grid.length;
-        int n = grid[0].length;
+        int m = grid.length; // number of rows
+        int n = grid[0].length; // number of columns
         Queue<int[]> queue = new LinkedList<>();
+        // Enqueue all initially rotten oranges
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 if (grid[i][j] == 2) {
@@ -474,24 +484,27 @@ public class LearnStackQueue {
                 }
             }
         }
-        int maxMinutes = 0;
+        int maxMinutes = 0; // Track the maximum time taken to rot all oranges
         while (!queue.isEmpty()) {
-            int[] curr = queue.poll();
+            int[] curr = queue.poll(); // {x, y, level}
+            // Process the current rotten orange
             int x = curr[0], y = curr[1], level = curr[2];
+            // x->row, y->column, level->minutes
+            // Check all four adjacent cells
 
-            if (x > 0 && grid[x - 1][y] == 1) {
+            if (x > 0 && grid[x - 1][y] == 1) { // Up
                 grid[x - 1][y] = 2;
                 queue.add(new int[]{x - 1, y, level + 1});
             }
-            if (x < m - 1 && grid[x + 1][y] == 1) {
+            if (x < m - 1 && grid[x + 1][y] == 1) { // Down
                 grid[x + 1][y] = 2;
                 queue.add(new int[]{x + 1, y, level + 1});
             }
-            if (y < n - 1 && grid[x][y + 1] == 1) {
+            if (y < n - 1 && grid[x][y + 1] == 1) { // Right
                 grid[x][y + 1] = 2;
                 queue.add(new int[]{x, y + 1, level + 1});
             }
-            if (y > 0 && grid[x][y - 1] == 1) {
+            if (y > 0 && grid[x][y - 1] == 1) { // Left
                 grid[x][y - 1] = 2;
                 queue.add(new int[]{x, y - 1, level + 1});
             }
@@ -508,7 +521,9 @@ public class LearnStackQueue {
     // Complexity Analysis:
     // Time Complexity: O(m * n), where m is the number of rows and n is the number of columns in the grid. Each cell is processed at most once.
     // Space Complexity: O(m * n) in the worst case, when all cells are rotten oranges and added to the queue.
-    // Explanation: We use a queue to perform a breadth-first search (BFS) starting from all initially rotten oranges. We enqueue their positions and the time level (minutes). For each rotten orange, we check its four adjacent cells. If any of them contain a fresh orange, we rot it and enqueue its position with an incremented time level. We keep track of the maximum time level reached during the BFS. After processing, we check if any fresh oranges remain; if so, we return -1. Otherwise, we return the maximum time level as the result.
+    // Explanation: We use a queue to perform a breadth-first search (BFS) starting from all initially rotten oranges. We enqueue their positions and the time level (minutes).
+    // For each rotten orange, we check its four adjacent cells. If any of them contain a fresh orange, we rot it and enqueue its position with an incremented time level.
+    // We keep track of the maximum time level reached during the BFS. After processing, we check if any fresh oranges remain; if so, we return -1. Otherwise, we return the maximum time level as the result.
 
 }
 
