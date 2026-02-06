@@ -1,4 +1,4 @@
-package JavaPrograms;
+package javaprograms;
 public class LearnPatterns {
     public static void main(String[] args) {
 

@@ -1,0 +1,94 @@
+/**
+ * @param {number} x
+ * @return {number}
+ */
+var mySqrt = function (x) {
+  if (x < 2) return x;
+
+  let l = 2;
+  let r = Math.floor(x / 2);
+
+  while (l <= r) {
+    let m = l + Math.floor((r - l) / 2);
+    if (x === m * m) {
+      return m;
+    } else if (x < m * m) {
+      r = m - 1;
+    } else {
+      l = m + 1;
+    }
+  }
+
+  return r;
+};
+
+console.log(mySqrt(8)); // Output: 2
+console.log(mySqrt(4)); // Output: 2
+
+// Complexity Analysis
+// Time complexity : O(logn). Binary search takes logarithmic time.
+// Space complexity : O(1). Constant space is used.
+// Explanation of the code
+// We start with two pointers, l and r, initialized to 2 and x/2 respectively.
+// We perform binary search by calculating the middle point m.
+// If m*m equals x, we have found the square root and return m.
+// If m*m is greater than x, we adjust the right pointer r to m-1.
+// If m*m is less than x, we adjust the left pointer l to m+1.
+// The loop continues until l exceeds r.
+// Finally, we return r, which will be the integer part of the square root of x.
+// Examples
+// For x = 8:
+// Initial l = 2, r = 4
+// 1st iteration: m = 3, 3*3 = 9 > 8, so r = 2
+// 2nd iteration: m = 2, 2*2 = 4 < 8, so l = 3
+// Now l > r, we return r = 2.
+// For x = 4:
+// Initial l = 2, r = 2
+// 1st iteration: m = 2, 2*2 = 4 == 4, we return m = 2.
+// The code correctly calculates the integer square root of a non-negative integer x using binary search.
+
+/**
+ * Forward declaration of guess API.
+ * @param {number} num   your guess
+ * @return 	     -1 if num is higher than the picked number
+ *			      1 if num is lower than the picked number
+ *               otherwise return 0
+ * var guess = function(num) {}
+ */
+
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var guessNumber = function (n) {
+  let l = 1;
+  let r = n;
+
+  while (l <= r) {
+    let m = l + Math.floor((r - l) / 2);
+    let result = guess(m);
+    if (result === 0) {
+      return m;
+    } else if (result < 0) {
+      r = m - 1;
+    } else if (result > 0) {
+      l = m + 1;
+    }
+  }
+  return -1;
+};
+
+console.log(guessNumber(10)); // Output: 6 (assuming the picked number is 6)
+// Complexity Analysis
+// Time complexity : O(logn). Binary search takes logarithmic time.
+// Space complexity : O(1). Constant space is used.
+// Explanation of the code
+// We start with two pointers, l and r, initialized to 1 and n respectively.
+// We perform binary search by calculating the middle point m.
+// We call the guess API with m and store the result.
+// If the result is 0, we have found the picked number and return m.
+// If the result is -1, it means m is higher than the picked number, so we adjust the right pointer r to m-1.
+// If the result is 1, it means m is lower than the picked number, so we adjust the left pointer l to m+1.
+// The loop continues until l exceeds r.
+// If we exit the loop without finding the picked number, we return -1.
+// The code correctly implements a binary search to find the picked number using the guess API.

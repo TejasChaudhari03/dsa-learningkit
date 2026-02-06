@@ -1,4 +1,4 @@
-package JavaPrograms;
+package javaprograms;
 import java.util.HashMap;
 import java.util.Map;
 public class LearnArrays {

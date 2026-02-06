@@ -1,4 +1,4 @@
-package JavaPrograms;
+package javaprograms;
 
 public class LearnSearchingSorting {
     // Linear Search Algorithm in Java

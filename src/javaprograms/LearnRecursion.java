@@ -1,4 +1,4 @@
-package JavaPrograms;
+package javaprograms;
 
 public class LearnRecursion {
     static int x = 1; // used in print() function

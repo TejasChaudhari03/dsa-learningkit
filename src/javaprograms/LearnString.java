@@ -1,12 +1,12 @@
-package JavaPrograms;
+package javaprograms;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Map;
-import java.util.Arrays;
+import java.util.Set;
 
 public class LearnString {
     public static void main(String[] args) {
@@ -223,7 +223,7 @@ public class LearnString {
 
     // Jewels and Stones - Using Set
     public static int numJewelsInStones(String jewels, String stones) {
-        Set<Character> jewelSet = new HashSet<Character>();
+        Set<Character> jewelSet = new HashSet<>();
         for (char jewel : jewels.toCharArray()) {
             jewelSet.add(jewel);
         }

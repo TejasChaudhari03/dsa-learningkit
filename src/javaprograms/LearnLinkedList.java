@@ -1,4 +1,4 @@
-package JavaPrograms;
+package javaprograms;
 
 import java.util.Set;
 import java.util.HashSet;
@@ -441,7 +441,7 @@ class MyLinkedList {
             curr = l2; // Start with list 2
             l2 = l2.next; // Move to the next node in list 2
         }
-        Node head = curr; // Store the head of the merged list
+        Node mergedHead = curr; // Store the head of the merged list
         // Merge the two lists by comparing values
         while(l1 != null && l2 != null) {
             if(l1.val < l2.val) {
@@ -456,7 +456,7 @@ class MyLinkedList {
         // Link any remaining nodes from either list
         if(l1 == null) curr.next = l2; // If list 1 is exhausted, link list 2
         if(l2 == null) curr.next = l1; // If list 2 is exhausted, link list 1
-        return head; // Return the head of the merged list
+        return mergedHead; // Return the head of the merged list
     }
     // Time complexity: O(m + n) because we traverse both lists once.
     // Space complexity: O(1) because we use a constant amount of extra space.
