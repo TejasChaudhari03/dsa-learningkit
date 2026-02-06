@@ -1,12 +1,25 @@
 package javaprograms;
 
-public class LearnBinarySearchAlgo {
-    public static void main(String[] args) {
-        System.out.println("Learn Binary Search Algorithm in Java");
+public class LearnBinarySearchAlgo extends GuessGame {
 
-        System.out.println("Square root of 16: " + sqrt(16)); // Should return 4
+    public LearnBinarySearchAlgo(int n) {
+        super(n);
     }
 
+    public static void main(String[] args) {
+
+        System.out.println("Learn Binary Search Algorithm in Java");
+
+        // ---- SQRT ----
+        System.out.println("Square root of 16: " + sqrt(16));
+
+        // ---- GUESS NUMBER ----
+        LearnBinarySearchAlgo game = new LearnBinarySearchAlgo(100);
+        int result = game.guessNumber(100);
+
+        System.out.println("Binary search found: " + result);
+        System.out.println("Actual picked number: " + game.getPick());
+    }
     // Square root of a number using binary search
     private static int sqrt(int n) {
         if (n < 2) return n; // Handle 0 and 1
@@ -41,17 +54,17 @@ public class LearnBinarySearchAlgo {
 
         while (left <= right) {
             int mid = left + (right - left) / 2;
-            int res = mid;
+            int res = guess(mid);
 
-            if (res == 0) {
-                return mid; // Found the picked number
+            if (res == 0) { 
+                return mid; // Found the correct number
             } else if (res < 0) {
-                right = mid - 1; // Mid is higher than the picked number
+                right = mid - 1; // Guess is too high, search in the left half
             } else {
-                left = mid + 1; // Mid is lower than the picked number
-            }
+                left = mid + 1; // Guess is too low, search in the right half
+            } 
         }
-        return -1; // If we exit the loop without finding the picked number
+        return -1;
     }
 
 }
