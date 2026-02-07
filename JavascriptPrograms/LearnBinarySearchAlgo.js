@@ -92,3 +92,49 @@ console.log(guessNumber(10)); // Output: 6 (assuming the picked number is 6)
 // The loop continues until l exceeds r.
 // If we exit the loop without finding the picked number, we return -1.
 // The code correctly implements a binary search to find the picked number using the guess API.
+
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ */
+var search = function (nums, target) {
+  let l = 0;
+  let r = nums.length - 1;
+  while (l <= r) {
+    let m = l + Math.floor((r - l) / 2);
+    if (target == nums[m]) {
+      return m;
+    }
+
+    if (nums[l] <= nums[m]) {
+      // left side sorted
+      if (target < nums[m] && target >= nums[l]) {
+        r = m - 1;
+      } else {
+        l = m + 1;
+      }
+    } else {
+      if (target > nums[m] && target <= nums[r]) {
+        l = m + 1;
+      } else {
+        r = m - 1;
+      }
+    }
+  }
+  return -1;
+};
+console.log(search([4, 5, 6, 7, 0, 1, 2], 0)); // Output: 4
+// Complexity Analysis
+// Time complexity : O(logn). Binary search takes logarithmic time.
+// Space complexity : O(1). Constant space is used.
+// Explanation of the code
+// We start with two pointers, l and r, initialized to 0 and the last index of the array respectively.
+// We perform binary search by calculating the middle point m.
+// If the target is found at index m, we return m.
+// We check if the left side of the array (from l to m) is sorted by comparing nums[l] and nums[m].
+// If the left side is sorted, we check if the target is within the range of the left side. If it is, we adjust the right pointer r to m-1. Otherwise, we adjust the left pointer l to m+1.
+// If the left side is not sorted, it means the right side (from m to r) is sorted. We check if the target is within the range of the right side. If it is, we adjust the left pointer l to m+1. Otherwise, we adjust the right pointer r to m-1.
+// The loop continues until l exceeds r.
+// If we exit the loop without finding the target, we return -1.
+// The code correctly implements a binary search to find the target in a rotated sorted array.

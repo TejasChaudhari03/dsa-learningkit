@@ -19,6 +19,13 @@ public class LearnBinarySearchAlgo extends GuessGame {
 
         System.out.println("Binary search found: " + result);
         System.out.println("Actual picked number: " + game.getPick());
+
+        // ---- SEARCH IN ROTATED SORTED ARRAY ----
+        int[] nums = {4,5,6,7,0,1,2};
+        int target = 0;
+        int index = search(nums, target);
+        System.out.println("Array: [4,5,6,7,0,1,2]");
+        System.out.println("Target " + target + " found at index: " + index);
     }
     // Square root of a number using binary search
     private static int sqrt(int n) {
@@ -66,5 +73,46 @@ public class LearnBinarySearchAlgo extends GuessGame {
         }
         return -1;
     }
+    // Complexity analysis:
+    // Time Complexity: O(log n) - Binary search halves the search space with each iteration
+    // Space Complexity: O(1) - Constant space used for variables
+    // Explanation: The function uses binary search to find the picked number. '
+    // It maintains a search range defined by left and right pointers, and iteratively narrows down this range based on the feedback from the guess API until it finds the correct number.
 
+    // Search in a rotated sorted array using binary search
+    // The array is sorted in ascending order and then rotated at some pivot. We need to find the index of the target value.
+    public static int search(int[] nums, int target) {
+        int l = 0, r = nums.length - 1 ;
+        while( l <=r ){
+            int m = l + (r-l)/2;
+            if(target == nums[m]){
+                return m;
+            }
+
+            if(nums[l] <= nums[m]){ // This checks if the left half of the array (from index l to m) is sorted.
+                if(target < nums[m] && target >= nums[l]){ 
+                    // This checks if the target is within the sorted left half. 
+                    // If it is, we can safely ignore the right half and continue searching in the left half by moving the right pointer to m - 1.
+                    r = m - 1;
+                }else{
+                    l = m + 1; // If the target is not in the sorted left half, it must be in the right half, so we move the left pointer to m + 1 to continue searching there.
+                }
+            }else{ // right side sorted 
+                if(target > nums[m] && target <= nums[r]){
+                    // This checks if the target is within the sorted right half. 
+                    // If it is, we can safely ignore the left half and continue searching in the right half by moving the left pointer to m + 1.
+                    l = m + 1;
+                }else{
+                    r = m - 1; // If the target is not in the sorted right half, it must be in the left half, so we move the right pointer to m - 1 to continue searching there.
+                }                
+            }
+        }
+
+        return -1;
+    }
+    // Complexity analysis:
+    // Time Complexity: O(log n) - Binary search halves the search space with each iteration
+    // Space Complexity: O(1) - Constant space used for variables
+    // Explanation: The function searches for a target value in a rotated sorted array. 
+    // It uses binary search to efficiently find the target by determining which half of the array is sorted and adjusting the search range accordingly.
 }

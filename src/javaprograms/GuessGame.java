@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class GuessGame {
 
-    private int pick;
+    private final int pick;
 
     public GuessGame(int n) {
         this.pick = new Random().nextInt(n) + 1;
