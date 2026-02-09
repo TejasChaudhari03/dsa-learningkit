@@ -2,6 +2,12 @@ package javaprograms;
 
 public class LearnBinarySearchAlgo extends GuessGame {
 
+    private static boolean isBadVersion(int m) {
+        // This is a placeholder for the actual implementation of the isBadVersion API.
+        // In a real scenario, this would be provided by the system or defined elsewhere in the codebase.
+        return m >= 4; // Example: versions 4 and above are bad
+    }
+
     public LearnBinarySearchAlgo(int n) {
         super(n);
     }
@@ -115,4 +121,24 @@ public class LearnBinarySearchAlgo extends GuessGame {
     // Space Complexity: O(1) - Constant space used for variables
     // Explanation: The function searches for a target value in a rotated sorted array. 
     // It uses binary search to efficiently find the target by determining which half of the array is sorted and adjusting the search range accordingly.
+
+    public static int firstBadVersion(int n) {
+        int l = 1 ,r = n;
+        while(l < r){ // 
+            int m = l + (r-l)/2;
+            if(!isBadVersion(m)){ 
+                l = m + 1;
+            }else{
+                r = m;
+            }
+        }
+        return r ;
+    }
+    // Complexity analysis:
+    // Time Complexity: O(log n) - Binary search halves the search space with each iteration
+    // Space Complexity: O(1) - Constant space used for variables
+    // Explanation: The function finds the first bad version among n versions.
+    // It uses binary search to efficiently find the first bad version by checking the middle version
+    // and adjusting the search range based on whether the middle version is bad or not.
+    // The loop continues until the search range is narrowed down to a single version, which is the first bad version.
 }
